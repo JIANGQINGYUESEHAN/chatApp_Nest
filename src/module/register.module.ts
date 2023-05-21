@@ -3,12 +3,13 @@ import * as services from '../service'
 import * as controller from '../controller'
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { UserEntity } from "src/entity/user.entity";
-import { DataBaseModule } from "./database.moudle";
+import { DatabaseModule } from "./database.moudle";
 import { UserRepository } from "src/repository/user.repository";
+import TypeOrmOptions from "src/config/databas.option";
 @Module({
-    imports:[TypeOrmModule.forFeature([UserEntity]),DataBaseModule.forRepository([UserRepository])],
+    imports:[DatabaseModule.forRepository([UserRepository])],
     providers:Object.values(services),
     controllers:Object.values(controller),
-    exports:[...Object.values(services),DataBaseModule.forRepository([UserRepository])]
+    exports:[...Object.values(services),DatabaseModule.forRepository([UserRepository])]
 })
 export class RegisterModule{}

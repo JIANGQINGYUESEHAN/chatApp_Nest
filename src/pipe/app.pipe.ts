@@ -8,54 +8,54 @@ import { isObject, omit, isFunction } from "lodash";
 export class AppPipe extends ValidationPipe {
     async transform(value: any, metadata: ArgumentMetadata) {
         let { type, metatype } = metadata
-        let dto = metatype
-        //读取配置
-        let option = Reflect.getMetadata(DTO_VALIDATION_OPTIONS, dto)||{}
+        let dto = metatype as any
+        //获取配置
+        let option = Reflect.getMetadata(DTO_VALIDATION_OPTIONS, dto)
+        //保存原有的验证规则
+        let originTransform = { ...this.transformOptions }
+        let originValidator = { ...this.validatorOptions }
+ 
+  
+        //解构获取的值
+        let { transformOptions, type: optionsType, ...customOption } = option || {}
+        let requestType: Paramtype = optionsType ?? 'body'
+        if (requestType !== type) return value
 
-        //保存配置
-        const originValidatorOption = { ...this.validatorOptions }
-        const originTransformOption = { ...this.transformOptions }
-
-        //读取配置
-        let {transformOption,type:optionType,...customOption}=option
-
-        //设置默认获取方式
-        const requestType:Paramtype=optionType || 'body'
-        //进行判断
-        if(requestType!==type) return value
-
-        if(transformOption){
-            //进行合并
-            this.transformOptions= merge(this.transformOptions,transformOption??{},{
-                arrayMerge:(_d,_s,o)=>_s
+        //合并验证规则
+        if (transformOptions) {
+            this.transformOptions = merge(this.transformOptions, transformOptions ?? {}, {
+                arrayMerge: (_d, _s, o) => _s
             })
         }
-
-        this.validatorOptions=merge(this.validatorOptions,customOption,{
-            arrayMerge:(_d,_s,o)=>_s
+        this.validatorOptions = merge(this.validatorOptions, customOption ?? {}, {
+            arrayMerge: (_d, _s, o) => _s
         })
 
-        //进行配置
-        const toValidator=isObject(value)?  Object.fromEntries(Object.entries((value as Record<string,any>).map(([k,v])=>{
-            if(!isObject(v)||!('mimetype' in v)){
-                return [k,v]
-            }else{
-                return [k,omit(v,['fields'])]
-            }
-        }))) :value
 
-        //进行序列化
-        let result=await super.transform(toValidator,metadata)
-        //判断result.transform 是否是个函数
-        if(typeof result.transform=='function'){
-            result=await result.transform(result)
-            let {transform,...data}=result
-            result=data
+      
+       
+        const toValidation = isObject(value)
+        ? Object.fromEntries(
+              Object.entries(value as Record<string, any>).map(([key, v]) => {
+                  if (!isObject(v) || !('mimetype' in v)) return [key, v];
+                  return [key, omit(v, ['fields'])];
+              }),
+          )
+        : value;
+
+
+
+        let result = await super.transform(toValidation, metadata)
+        if (typeof result.transform == 'function') {
+            result = result.transform(result)
+            let { transform, ...data } = result
+            result = data
         }
-        this.validatorOptions = originValidatorOption;
-        // 重置transform选项
-        this.transformOptions = originTransformOption;
-        return result;
+        
+        this.transformOptions = originTransform
+        this.validatorOptions = originValidator
+        
+        return result
 
     }
 }

@@ -29,6 +29,10 @@ export class UserEntity {
     email: string;
 
     @Expose()
+    @Column({ comment:"手机号"})
+    phone:string;
+
+    @Expose()
     @Column({ default:null ,comment:"性别"})
     gender: string;
 
