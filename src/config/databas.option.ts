@@ -30,7 +30,7 @@ function TypeOrmOptions(): TypeOrmModuleOptions {
         username: Config[databaseConfig.DB_USERNAME],
         password: Config[databaseConfig.DB_PASSWORD],
         database: Config[databaseConfig.DB_DATABASE],
-        synchronize: true,
+        synchronize:Config[databaseConfig.DB_SYNC] as any,
         autoLoadEntities: true,
         logging: false,
     }

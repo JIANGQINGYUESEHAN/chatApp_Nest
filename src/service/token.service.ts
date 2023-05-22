@@ -27,6 +27,6 @@ export class TokenService{
         let config=AccessTokenConfig()
         const result = jwt.verify(token, config.TokenConfig.secret);
         if (!result) return false;
-        return result;
+        return true;
     }
 }

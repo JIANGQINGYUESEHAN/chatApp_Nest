@@ -1,6 +1,7 @@
 import { DefaultAvatarImage } from "src/config/entity.config";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
-import {  Expose} from 'class-transformer'
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {  Exclude, Expose} from 'class-transformer'
+import { FriendEntity } from "./friend.entity";
 
 @Entity()
 export class UserEntity {
@@ -16,8 +17,8 @@ export class UserEntity {
     @Column({comment:"昵称",length:10})
     username: string;
 
-    @Expose()
-    @Column({ select: false ,comment:"密码"})
+    @Exclude()
+    @Column({ select: true ,comment:"密码"})
     password: string;
 
     @Expose()
@@ -39,6 +40,9 @@ export class UserEntity {
     @Expose()
     @Column({ default: "" })
     address: string;
+
+    @OneToMany(()=>FriendEntity,friend=>friend.user)
+    friend:FriendEntity
 
     @CreateDateColumn()
     createTime: string;
