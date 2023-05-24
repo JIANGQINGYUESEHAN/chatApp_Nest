@@ -1,5 +1,7 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
-import { LoginDto, RegisterUserDto } from "src/dto/user.dto";
+import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from "@nestjs/common";
+import { ReqUser } from "src/decorator/requser.decorator";
+import { LoginDto, RegisterUserDto, UpdateDto } from "src/dto/user.dto";
+import { JwtGuard } from "src/guard/App.guard";
 import { UserService } from "src/service";
 
 @Controller('/user')
@@ -19,6 +21,17 @@ export class UserController {
         console.log(loginDto);
 
         return this.userService.login(loginDto)
+
+    }
+
+    //更新用户
+    @UseGuards(JwtGuard)
+    @Post('/update')
+    @HttpCode(200)
+    updateUser(@Body() updateDto: UpdateDto, @ReqUser() userId) {
+        //console.log(userId);
+
+        return this.userService.UpdateUser(updateDto, userId)
 
     }
 }

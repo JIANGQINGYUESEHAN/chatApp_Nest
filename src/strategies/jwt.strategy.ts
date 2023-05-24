@@ -12,7 +12,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         secretOrKey: config.TokenConfig.secret,
       });
     }
-    async validate(payload: any) {
-      return { userId: payload.id, username: payload.username };
-    }
+    // async validate(payload: any) {
+    //   return { userId: payload.id, username: payload.username };
+    // }
   }

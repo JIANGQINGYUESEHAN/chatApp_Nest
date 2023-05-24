@@ -1,21 +1,23 @@
 import { DefaultAvatarImage } from "src/config/entity.config";
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import {  Exclude, Expose} from 'class-transformer'
 import { FriendEntity } from "./friend.entity";
 
 @Entity()
-export class UserEntity {
+export class UserEntity extends BaseEntity  {
+
     @Expose()
     @PrimaryGeneratedColumn('uuid')
     id: string
+
+    @Column({ comment: '昵称' })
+    username: string
 
     @Expose()
     @Column({ default: DefaultAvatarImage })
     avatarSrc: string;
 
-    @Expose()
-    @Column({comment:"昵称",length:10})
-    username: string;
+   
 
     @Exclude()
     @Column({ select: true ,comment:"密码"})

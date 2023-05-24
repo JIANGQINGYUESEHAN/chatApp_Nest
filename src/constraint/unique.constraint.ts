@@ -47,13 +47,11 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
     defaultMessage(args?: ValidationArguments): string {
         const { entity, property } = args.constraints[0];
         const queryProperty = property ?? args.property;
-        if (!(args.object as any).getManager) {
-            return 'getManager function not been found!';
-        }
+       
         if (!entity) {
             return 'Model not been specified!';
         }
-        return `${queryProperty} of ${entity.name} must been unique!`;
+        return `${queryProperty} of ${entity.username} must been unique!`;
     }
 }
 // param: ObjectType<any> | Condition：这是用于指定要验证的实体类或验证条件对象的参数。它可以是一个实体类的类型（ObjectType<any>），也可以是一个验证条件对象（Condition）。

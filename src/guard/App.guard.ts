@@ -15,9 +15,13 @@ export class JwtGuard extends AuthGuard('jwt') {
 
         //从请求头中获取token
         let token = ExtractJwt.fromAuthHeaderAsBearerToken()(request)
+        // console.log(token);
+        
         //先看是否存在
-        if (isNil(token)) return false
+        if (!token) return false
         //存在后验证token是否合格
+      
+        
         let IsTrue = this.tokenService.verifyAccessToken(token)
         return IsTrue
 

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString, Length } from "class-validator"
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Length } from "class-validator"
 import { DataExist } from "src/constraint/exist.constraint"
 import { IsRegular } from "src/constraint/regular.constraint"
 import { IsUnique } from "src/constraint/unique.constraint"
@@ -9,8 +9,8 @@ import { UserEntity } from "src/entity/user.entity"
 export class RegisterUserDto {
     @IsString()
     @IsNotEmpty()
-    // @Length(8,2,{message:"用户名长度不符合要求"})
-    // @IsUnique({entity:UserEntity})
+    @Length(1, 8, { message: "用户名长度不符合要求" })
+    @IsUnique({ entity: UserEntity })
     username: string
     @IsString()
     @IsNotEmpty()
@@ -30,7 +30,7 @@ export class RegisterUserDto {
 export class LoginDto {
     @IsNotEmpty({ message: "用户名不为空" })
     @IsString({ message: '字符串' })
-    @DataExist({entity:UserEntity})
+    @DataExist({ entity: UserEntity })
     username: string
 
     @IsRegular(/^[a-zA-Z0-9]{8}$/)
@@ -39,3 +39,29 @@ export class LoginDto {
     password: string
 }
 
+
+//更新用户的选项
+@DtoDecorator({ type: 'body' })
+export class UpdateDto {
+    @IsString()
+  
+    @Length(1, 8, { message: "用户名长度不符合要求" })
+    @IsUnique({ entity: UserEntity })
+    @IsOptional()
+    username?: string
+    
+    @IsUnique({ entity: UserEntity })
+    @IsOptional()
+    email?: string;
+    
+    @IsOptional()
+    @IsUnique({ entity: UserEntity })
+    phone?: string;
+    @IsString()
+    @IsOptional()
+    gender?: string;
+
+    @IsString()
+    @IsOptional()
+    address?: string;
+}
