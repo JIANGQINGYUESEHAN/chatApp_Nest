@@ -7,7 +7,7 @@ import { FriendEntity } from "./friend.entity";
 export class UserEntity extends BaseEntity  {
 
     @Expose()
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn()
     id: string
 
     @Column({ comment: '昵称' })
@@ -17,7 +17,8 @@ export class UserEntity extends BaseEntity  {
     @Column({ default: DefaultAvatarImage })
     avatarSrc: string;
 
-   
+
+
 
     @Exclude()
     @Column({ select: true ,comment:"密码"})
@@ -44,7 +45,7 @@ export class UserEntity extends BaseEntity  {
     address: string;
 
     @OneToMany(()=>FriendEntity,friend=>friend.user)
-    friend:FriendEntity
+    friend:FriendEntity[]
 
     @CreateDateColumn()
     createTime: string;

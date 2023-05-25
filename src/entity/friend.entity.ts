@@ -7,11 +7,11 @@ export class FriendEntity {
   id: number;
 
   @ManyToOne(() => UserEntity, user => user.id)
-  @JoinColumn({ name: "userId" })
+
   user: UserEntity;
 
   @ManyToOne(() => UserEntity, user => user.id)
-  @JoinColumn({ name: "friendId" })
+ 
   friend: UserEntity;
   
 }

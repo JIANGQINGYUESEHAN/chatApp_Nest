@@ -14,6 +14,7 @@ import { UserRepository } from './repository/user.repository';
 import * as services from './service'
 import * as controller from './controller'
 import { FriendEntity } from './entity/friend.entity';
+import { FriendRepository } from './repository/friend.repository';
 export const jwtModuleRegister = (): JwtModuleOptions => {
   const config = AccessTokenConfig()
   const isProd = 'production'
@@ -31,7 +32,7 @@ export const jwtModuleRegister = (): JwtModuleOptions => {
 
 
 @Module({
-  imports: [DatabaseModule.forRoot(TypeOrmOptions()), TypeOrmModule.forFeature([UserEntity,FriendEntity]), JwtModule.registerAsync({ useFactory: jwtModuleRegister }), PassportModule, DatabaseModule.forRepository([UserRepository]),],
+  imports: [DatabaseModule.forRoot(TypeOrmOptions()), TypeOrmModule.forFeature([UserEntity,FriendEntity]), JwtModule.registerAsync({ useFactory: jwtModuleRegister }), PassportModule, DatabaseModule.forRepository([UserRepository,FriendRepository]),],
   controllers: Object.values(controller),
   exports: [...Object.values(services), DatabaseModule.forRepository([UserRepository])],
   providers: [...Object.values(services), {

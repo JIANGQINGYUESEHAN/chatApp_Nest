@@ -21,6 +21,7 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
             property: args.property
         }
         //合并对象
+console.log(value);
 
 
         const condition = ('entity' in args.constraints[0]
@@ -29,6 +30,8 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
                 ...config,
                 entity: args.constraints[0],
             }) as unknown as Required<Condition>;
+        
+            
         //在判断有没有 
         if (!condition.entity) {
             return false

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString, Length } from "class-validator"
+import { IsNotEmpty, IsNumber, IsOptional, IsString, Length, isString } from "class-validator"
 import { DataExist } from "src/constraint/exist.constraint"
 import { IsRegular } from "src/constraint/regular.constraint"
 import { IsUnique } from "src/constraint/unique.constraint"
@@ -64,4 +64,12 @@ export class UpdateDto {
     @IsString()
     @IsOptional()
     address?: string;
+}
+
+//更新密码
+@DtoDecorator({ type: 'body' })
+export class UpdatePasswordDto{
+    @IsRegular(/^[a-zA-Z0-9]{8}$/)
+    @IsString()
+    newPassword:string
 }

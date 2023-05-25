@@ -21,10 +21,14 @@ export class DataExistConstraint implements ValidatorConstraintInterface{
         }
       
         let condition:Condition=("entity" in args.constraints[0] ? merge(config,args.constraints[0]) : {...config,...args.constraints[0]}) as Required<Condition>
-       if(!condition.entity) return false
+        if(!condition.entity) return false
+       
+       
         try {
             //进行查询
-            let result=this.dataSource.getRepository(condition.entity). createQueryBuilder().where({[condition.property]:value}).getOne()
+            let result= await this.dataSource.getRepository(condition.entity). createQueryBuilder().where({[condition.property]:value}).getOne()
+            
+            
             if(!isNil(result)) return true
             
         } catch (error) {

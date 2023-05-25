@@ -1,3 +1,4 @@
+import { HttpException } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 //密码加密
 export function encryption(password: string) {
@@ -30,3 +31,14 @@ export const AccessTokenConfig = (): UserConfigInterface => {
         }
     }
 }
+
+export enum StatusCode {
+    Success = 200,
+    Error = 403,
+    SocketConnectError = 205,
+  }
+  export default class CommonException extends HttpException {
+    constructor(msg: string, statusCode = StatusCode.Error) {
+      super({ statusCode, message: msg }, StatusCode.Error);
+    }
+  }

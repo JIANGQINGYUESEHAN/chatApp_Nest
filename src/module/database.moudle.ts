@@ -2,6 +2,7 @@ import { DynamicModule, Module, Provider, Type } from '@nestjs/common';
 import { getDataSourceToken, TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { CUSTOM_REPOSITORY_METADATA } from 'src/config/decorator.config';
 import { DataExistConstraint } from 'src/constraint/exist.constraint';
+
 import { IsUniqueConstraint } from 'src/constraint/unique.constraint';
 
 
@@ -15,7 +16,8 @@ export class DatabaseModule {
             imports: [TypeOrmModule.forRoot(configRegister)],
             providers: [
                 IsUniqueConstraint,
-                DataExistConstraint
+                DataExistConstraint,
+               
             ],
         };
     }

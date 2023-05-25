@@ -1,5 +1,5 @@
 import { Body, ExecutionContext, Inject, Injectable } from "@nestjs/common";
-import { LoginDto, RegisterUserDto, UpdateDto } from "src/dto/user.dto";
+import { LoginDto, RegisterUserDto, UpdateDto, UpdatePasswordDto } from "src/dto/user.dto";
 import { UserRepository } from "src/repository/user.repository";
 import { isNil } from 'lodash'
 import { TokenService } from "./token.service";
@@ -8,76 +8,125 @@ import { ExtractJwt } from "passport-jwt";
 import * as request from 'supertest';
 import { UserEntity } from "src/entity/user.entity";
 import { UpdateResult } from "typeorm";
+import CommonException from "src/config/util.config";
 @Injectable()
 export class UserService {
-    constructor(
-        protected userRepository: UserRepository,
-        protected tokenService: TokenService,
-        
-    ) { }
-    //注册用户
-    async register(registerUserDto: RegisterUserDto) {
-        let item =await this.userRepository.save(registerUserDto, { reload: true });
-        if (isNil(item)) return "注册失败"
-        return "注册成功"
+  constructor(
+    protected userRepository: UserRepository,
+    protected tokenService: TokenService,
 
-    }
-    //登录
-    async login(loginDto: LoginDto) {
-        //跟据 username 查询 数据 和密码 对比密码  返回token
-        let result = await this.userRepository.createQueryBuilder('user')
-                               .where({ username: loginDto.username })
-                               .getOne()
-        //比较密码
+  ) { }
+  //注册用户
+  async register(registerUserDto: RegisterUserDto) {
+    let item = await this.userRepository.save(registerUserDto, { reload: true });
+    if (isNil(item)) return "注册失败"
+    return "注册成功"
 
-        if(!result) return "请输入正确的账号和密码"
-        //返回token
-        let now=dayjs()
-        let token=await this.tokenService.generateAccessToken(result,now)
+  }
+  //登录
+  async login(loginDto: LoginDto) {
+    //跟据 username 查询 数据 和密码 对比密码  返回token
+    let result = await this.userRepository.createQueryBuilder('user')
+      .where({ username: loginDto.username })
+      .getOne()
+    //比较密码
 
-        return token
-        
+    if (!result) return "请输入正确的账号和密码"
+    //返回token
+    let now = dayjs()
+    let token = await this.tokenService.generateAccessToken(result, now)
 
-    }
-    //跟新用户
-    async UpdateUser(updateDto: UpdateDto, userId: string) {
-        console.log(userId);
-        
-        try {
-          // 获取qb
-          const qb = await this.userRepository.createQueryBuilder().where("id = :id", { id:userId })
-        // console.log(qb); // 打印生成的 SQL 查询语句，用于调试
-        //return qb
-        //   // 进行更新操作
-         const result: UpdateResult = await qb.update().set({ ...updateDto }).execute();
-          console.log(result);
-      
-          if (result.affected === 0) {
-            throw new Error("User not found or update operation failed."); // 抛出错误，指示更新失败
-          }
-      
-          return {
-            result,
-            msg:"更新成功"
-          };
-        } catch (error) {
-          console.error(error); // 打印错误消息或异常信息，用于调试
-          throw error; // 重新抛出异常，以便在调用方进行进一步处理
-        }
+    return token
+
+
+
+  }
+  //跟新用户
+  async UpdateUser(updateDto: UpdateDto, userId: string) {
+    console.log(userId);
+    //       createQueryBuilder()
+    // .update(User)
+    // .set({ firstName: "Timber", lastName: "Saw" })
+    // .where("id = :id", { id: 1 })
+    // .execute();
+    try {
+      // 获取qb
+      const qb = await this.userRepository.createQueryBuilder()
+      // console.log(qb); // 打印生成的 SQL 查询语句，用于调试
+      //return qb
+      //   // 进行更新操作
+      const result: UpdateResult = await qb.update().set({ ...updateDto }).where("id = :id", { id: userId }).execute();
+      console.log(result);
+
+      if (result.affected === 0) {
+        throw new Error("User not found or update operation failed."); // 抛出错误，指示更新失败
       }
-    //修改密码
-    fixPassword(){}
 
-    //忘记密码
+      return {
+        result,
+        msg: "更新成功"
+      };
+    } catch (error) {
+      console.error(error); // 打印错误消息或异常信息，用于调试
+      throw error; // 重新抛出异常，以便在调用方进行进一步处理
+    }
+  }
+  //修改密码
+  async fixPassword(oldPassword: UpdatePasswordDto, id) {
+    let qb = await this.userRepository.createQueryBuilder()
+    let item = await qb.where({ id }).getOne()
+    if (!item) return "token 错误"
+    if (item.password == oldPassword.newPassword) return "密码不应该相同"
+    try {
+      // 获取qb
+      const qb = await this.userRepository.createQueryBuilder()
+      // console.log(qb); // 打印生成的 SQL 查询语句，用于调试
+      //return qb
+      //   // 进行更新操作
+      const result: UpdateResult = await qb.update().set({ password: oldPassword.newPassword }).where("id = :id", { id }).execute();
+      // console.log(result);
 
-    //修改标签
+      if (result.affected === 0) {
+        throw new Error("User not found or update operation failed."); // 抛出错误，指示更新失败
+      }
 
-    //删除用户
+      return {
+        result,
+        msg: "更新成功"
+      };
+    } catch (error) {
+      console.error(error); // 打印错误消息或异常信息，用于调试
+      throw error; // 重新抛出异常，以便在调用方进行进一步处理
+    }
 
-    //删除好友
 
-    //添加好友
-    //添加群
-    //退群
+  }
+//获取用户详情
+ async GetDetail(credential){
+  
+    let item= await this.userRepository.createQueryBuilder('user').where('user.username = :credential', { credential })
+    .orWhere('user.email = :credential', { credential })
+    .orWhere('user.phone = :credential', { credential })
+    .orWhere('user.id = :credential', { credential })
+    .getOne()
+  
     
+    
+    if(!(item&&item.id))  throw new CommonException("获取失败 请重新输入")
+    return item
+  }
+
+  //忘记密码
+
+  //修改标签
+
+  //删除用户
+
+  //删除好友
+
+  //添加好友
+  //添加群
+
+  //退群
+
 }
