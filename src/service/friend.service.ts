@@ -5,6 +5,7 @@ import { FriendRepository } from 'src/repository/friend.repository';
 import CommonException from 'src/config/util.config';
 import { FriendEntity } from 'src/entity/friend.entity';
 import { In } from 'typeorm';
+
 @Injectable()
 export class FriendService {
     constructor(
@@ -57,12 +58,35 @@ export class FriendService {
             .getMany()
 
 
+
         return user
 
 
 
     }
     //获取好友信息
+   async getFriendMessage(findFriendDto){
+   return this.userService.GetDetail(findFriendDto)
+   }
+    //删除朋友
+   async DeleteFriend(OwnerId,deleteFriend){
+    // let Owner = await this.userService.GetDetail(OwnerId)
+
+
+    // let Friend = await this.userService.GetDetail(FriendId)
+
+    let item=  await  this.friendRepository.createQueryBuilder().delete().where({user:OwnerId,friend:deleteFriend}).execute()
+   if(item.affected==1){
+    return {
+        msg:"删除成功"
+    }
+   }
+    return {
+        msg:"删除失败"
+    }
+    
+    }
+    
 
 
 

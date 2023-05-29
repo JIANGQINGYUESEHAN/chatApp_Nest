@@ -15,6 +15,9 @@ import * as services from './service'
 import * as controller from './controller'
 import { FriendEntity } from './entity/friend.entity';
 import { FriendRepository } from './repository/friend.repository';
+import { GroupRelationRepository, GroupRepository } from './repository/group.repository';
+import { GroupEntity } from './entity/group.entity';
+import { GroupRelationEntity } from './entity/group.relation.entity';
 export const jwtModuleRegister = (): JwtModuleOptions => {
   const config = AccessTokenConfig()
   const isProd = 'production'
@@ -32,9 +35,12 @@ export const jwtModuleRegister = (): JwtModuleOptions => {
 
 
 @Module({
-  imports: [DatabaseModule.forRoot(TypeOrmOptions()), TypeOrmModule.forFeature([UserEntity,FriendEntity]), JwtModule.registerAsync({ useFactory: jwtModuleRegister }), PassportModule, DatabaseModule.forRepository([UserRepository,FriendRepository]),],
+  imports: [DatabaseModule.forRoot(TypeOrmOptions()), TypeOrmModule.forFeature([UserEntity,FriendEntity,GroupEntity,GroupRelationEntity]), 
+  JwtModule.registerAsync({ useFactory: jwtModuleRegister }),
+   PassportModule, 
+   DatabaseModule.forRepository([UserRepository,FriendRepository,FriendRepository,GroupRepository,GroupRelationRepository]),],
   controllers: Object.values(controller),
-  exports: [...Object.values(services), DatabaseModule.forRepository([UserRepository])],
+  exports: [...Object.values(services), DatabaseModule.forRepository([UserRepository,FriendRepository,GroupRepository,GroupRelationRepository])],
   providers: [...Object.values(services), {
     provide: APP_INTERCEPTOR,
     useClass: TransformInterceptor,
