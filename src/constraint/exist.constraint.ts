@@ -26,8 +26,10 @@ export class DataExistConstraint implements ValidatorConstraintInterface{
        
         try {
             //进行查询
-            let result= await this.dataSource.getRepository(condition.entity). createQueryBuilder().where({[condition.property]:value}).getOne()
             
+            
+            let result= await this.dataSource.getRepository(condition.entity). createQueryBuilder().where({[condition.property]:value}).getOne()
+           
             
             if(!isNil(result)) return true
             

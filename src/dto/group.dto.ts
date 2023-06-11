@@ -14,3 +14,27 @@ export class CreateGroupDto{
     @IsOptional()
     intro?:string
 }
+@DtoDecorator({type:'param'})
+export class DeleteGroup{
+    @DataExist({entity:GroupEntity})
+    id:string
+}
+
+//修改群名称 头像
+@DtoDecorator({type:'body'})
+export class UpdateGroupDto{
+    @IsNotEmpty()
+    @IsString()
+    @IsOptional()
+    avatarSrc?: string;
+
+    @IsNotEmpty()
+    @IsString()
+    @IsOptional()
+    groupName?: string;
+
+    @IsNotEmpty()
+    @IsString()
+    @IsOptional()
+    intro?: string;
+}

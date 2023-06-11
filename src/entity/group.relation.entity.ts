@@ -7,11 +7,11 @@ export class GroupRelationEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => GroupEntity, group => group.id)
-  @JoinColumn({ name: "groupId" })
+  @ManyToOne(() => GroupEntity, groupRelation => groupRelation.group)
+  @JoinColumn()
   group: GroupEntity;
 
   @ManyToOne(() => UserEntity, user => user.id)
-  @JoinColumn({ name: "userId" })
+  @JoinColumn()
   user: UserEntity;
 }
