@@ -5,7 +5,7 @@ import { CUSTOM_STRING_METADATA_KEY } from "src/config/decorator.config";
 import { AccessTokenConfig } from "src/config/util.config";
 import { GroupRelationRepository, GroupRepository } from "src/repository/group.repository";
 import * as jwt from 'jsonwebtoken';
-export class AddGroupGuard implements CanActivate{
+export class AddGroupGuard implements CanActivate {
     constructor(
         protected groupRepository: GroupRepository,
         protected groupRelationRepository: GroupRelationRepository
@@ -30,40 +30,41 @@ export class AddGroupGuard implements CanActivate{
         let obj
         //token 进行解析
         try {
-          obj = jwt.verify(token, config.TokenConfig.secret);
-            // 验证成功，继续处理逻辑
-                 //获取从前端传回的param参数
-        let param = this.GetParam(request, 'id')
+            let param = this.GetParam(request, 'id')
 
-        const customString = Reflect.getMetadata(CUSTOM_STRING_METADATA_KEY, context.getHandler());
+            const customString = Reflect.getMetadata(CUSTOM_STRING_METADATA_KEY, context.getHandler());
 
-        //跟据传回的参数进行查询
+            //跟据传回的参数进行查询
 
-        //查看群的守卫
-        if (customString == 'userId') {
-            let item = await this.groupRelationRepository.createQueryBuilder('group').where("group.groupId = :groupId", { groupId: param })
-                .leftJoinAndSelect('group.user', 'userId')
-                .getMany()
-            let userId = obj.sub
-            if (!item) {
-                throw new HttpException("无对应", HttpStatus.UNAUTHORIZED)
+            //查看群的守卫
+            if (customString == 'userId') {
+                let item = await this.groupRelationRepository.createQueryBuilder('group').where("group.groupId = :groupId", { groupId: param })
+                    .leftJoinAndSelect('group.user', 'userId')
+                    .getMany()
+                let userId = obj.sub
+                if (!item) {
+                    throw new HttpException("无对应", HttpStatus.UNAUTHORIZED)
+                }
+                let isTrue = item.some((item, index) => {
+                    return userId == item.user.id
+                })
+
+
+                return !isTrue
+
+
             }
-            let isTrue = item.some((item, index) => {
-                return userId == item.user.id
-            })
-
-
-            return !isTrue
-
-
+            // 验证成功，继续处理逻辑
+        } catch (error) {
+            if (error.name === 'JsonWebTokenError') {
+                // JWT 验证失败，需要重新登录
+                throw new HttpException({
+                    msg: '请重新登录'
+                }, HttpStatus.UNAUTHORIZED);
+            }
         }
-          } catch (error) {
-            // 验证失败，需要重新登录
-            throw new HttpException({
-              msg: "请重新登录"
-            }, HttpStatus.UNAUTHORIZED);
-          }
-   
+        //获取从前端传回的param参数
+
     }
 
 

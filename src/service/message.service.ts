@@ -123,11 +123,27 @@ export class MessageService {
 
     }
 
-     // 查询我发给好友的/好友发给我的 消息
-    async getFriendMessage(userId, friendId){
-        console.log(userId,friendId);
-        
+    // 查询我发给好友的/好友发给我的 消息
+    async getFriendMessage(userId, friendId) {
+
+        let item = await this.friendMessageRepository.createQueryBuilder('msg')
+            .orderBy("msg.createTime", "ASC")
+            .leftJoinAndSelect('msg.sender', 'sender')
+            .leftJoinAndSelect('msg.receiver', 'receiver')
+            .where('msg.sender= :senderId And msg.receiver= :receiverId ',
+                {
+                    senderId: userId,
+                    receiverId: friendId,
+                })
+            .orWhere("sender.id = :receiverId And receiver.id = :senderId", {
+                senderId: userId,
+                receiverId: friendId,
+            })
+            .getMany()
+           return item
+            
     }
+    async sendFriendMessage({ senderId, receiverId, content = "", type = "text" }){}
 }
 
 

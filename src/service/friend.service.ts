@@ -17,6 +17,7 @@ export class FriendService {
     //添加好友
     //判断是否是自己好友
     async checkRelation(OwnerId, FriendId) {
+      
         let IsFriend = false
         //判断是否相等不能加自己
 
@@ -24,6 +25,8 @@ export class FriendService {
 
 
         let Friend = await this.userService.GetDetail(FriendId)
+      
+        
 
         if (Owner.id == Friend.id) {
             throw new CommonException("不能添加自己")
@@ -34,7 +37,7 @@ export class FriendService {
             return item.friend.id === Friend.id;
 
         })
-        console.log(IsFriend);
+       
 
         return { Owner, Friend, IsFriend }
     }
@@ -86,8 +89,7 @@ export class FriendService {
     }
     
     }
-    
-
+   
 
 
 }
