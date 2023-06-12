@@ -2,6 +2,8 @@ import { DefaultAvatarImage } from "src/config/entity.config";
 import { BaseEntity, Column, CreateDateColumn, Entity, JoinColumn, JoinTable, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import {  Exclude, Expose} from 'class-transformer'
 import { FriendEntity } from "./friend.entity";
+import { FriendMessageEntity } from "./friendmessage.entity";
+import { GroupMessageEntity } from "./groupmessage.entity";
 
 @Entity()
 export class UserEntity extends BaseEntity  {
@@ -47,6 +49,13 @@ export class UserEntity extends BaseEntity  {
     @OneToMany(()=>FriendEntity,friend=>friend.user)
     friend:FriendEntity[]
 
+    @OneToMany(() => FriendMessageEntity, msg => msg.sender)
+    friendMessage: FriendMessageEntity[];
+  
+    @OneToMany(() => GroupMessageEntity, msg => msg.user)
+    groupMessage: GroupMessageEntity[];
+
+    
     @CreateDateColumn()
     createTime: string;
 }

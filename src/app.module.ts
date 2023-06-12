@@ -18,6 +18,9 @@ import { FriendRepository } from './repository/friend.repository';
 import { GroupRelationRepository, GroupRepository } from './repository/group.repository';
 import { GroupEntity } from './entity/group.entity';
 import { GroupRelationEntity } from './entity/group.relation.entity';
+import { FriendMessageEntity,} from './entity/friendmessage.entity';
+import {  GroupMessageEntity } from './entity/groupmessage.entity';
+import { FriendMessageRepository, GroupMessageRepository } from './repository/message.repository';
 export const jwtModuleRegister = (): JwtModuleOptions => {
   const config = AccessTokenConfig()
   const isProd = 'production'
@@ -35,10 +38,10 @@ export const jwtModuleRegister = (): JwtModuleOptions => {
 
 
 @Module({
-  imports: [DatabaseModule.forRoot(TypeOrmOptions()), TypeOrmModule.forFeature([UserEntity,FriendEntity,GroupEntity,GroupRelationEntity]), 
+  imports: [DatabaseModule.forRoot(TypeOrmOptions()), TypeOrmModule.forFeature([UserEntity,FriendEntity,GroupEntity,GroupRelationEntity,GroupMessageEntity,FriendMessageEntity]), 
   JwtModule.registerAsync({ useFactory: jwtModuleRegister }),
    PassportModule, 
-   DatabaseModule.forRepository([UserRepository,FriendRepository,FriendRepository,GroupRepository,GroupRelationRepository]),],
+   DatabaseModule.forRepository([UserRepository,FriendRepository,FriendRepository,GroupRepository,GroupRelationRepository, GroupMessageRepository ,FriendMessageRepository]),],
   controllers: Object.values(controller),
   exports: [...Object.values(services), DatabaseModule.forRepository([UserRepository,FriendRepository,GroupRepository,GroupRelationRepository])],
   providers: [...Object.values(services), {

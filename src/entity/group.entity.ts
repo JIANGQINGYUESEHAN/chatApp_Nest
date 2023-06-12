@@ -3,6 +3,7 @@ import { UserEntity } from "./user.entity";
 import { Expose } from "class-transformer";
 import { DefaultAvatarImage } from "src/config/entity.config";
 import { GroupRelationEntity } from "./group.relation.entity";
+import { GroupMessageEntity } from "./groupmessage.entity";
 
 @Entity()
 export class GroupEntity {
@@ -29,6 +30,9 @@ export class GroupEntity {
     @OneToMany(() => GroupRelationEntity, (GroupRelation) => GroupRelation.id,{cascade:true})
     group: GroupRelationEntity
 
+    @OneToMany(() => GroupMessageEntity, msg => msg.group)
+    groupMessage: GroupMessageEntity[];
+    
     @Expose()
     @CreateDateColumn()
     createTime: string;

@@ -31,55 +31,68 @@ export class GrouperGuard implements CanActivate {
                 msg: "请登录"
             }, HttpStatus.UNAUTHORIZED)
         }
+
         //检验 token 并且返回 userid
         let config = AccessTokenConfig()
         //token 进行解析
-        let obj = jwt.verify(token, config.TokenConfig.secret);
+        let obj
+        //token 进行解析
+        try {
+            obj = jwt.verify(token, config.TokenConfig.secret);
+            let param = this.GetParam(request, 'id')
 
+            const customString = Reflect.getMetadata(CUSTOM_STRING_METADATA_KEY, context.getHandler());
+    
+            //跟据传回的参数进行查询
+    
+    
+            //删除群的守卫
+            if (customString == 'groupManagerId') {
+                let item = await this.groupRepository.findOne({ where: { id: param } })
+                if (!item) {
+                    throw new HttpException("无对应", HttpStatus.UNAUTHORIZED)
+                }
+    
+    
+                //进行比较
+                if (item[customString] == obj.sub) {
+                    return true
+                } else {
+                    throw new HttpException("无对应的群组", HttpStatus.UNAUTHORIZED)
+                }
+    
+    
+            }
+    
+            //查看群的守卫
+            if (customString == 'userId') {
+                let item = await this.groupRelationRepository.createQueryBuilder('group').where("group.groupId = :groupId", { groupId: param })
+                    .leftJoinAndSelect('group.user', 'userId')
+                    .getMany()
+                let userId = obj.sub
+                if (!item) {
+                    throw new HttpException("无对应", HttpStatus.UNAUTHORIZED)
+                }
+                let isTrue = item.some((item, index) => {
+                    return userId == item.user.id
+                })
+    
+    
+                return isTrue
+    
+    
+            }
+    
+            // 验证成功，继续处理逻辑
+        } catch (error) {
+            // 验证失败，需要重新登录
+            throw new HttpException({
+                msg: "请重新登录"
+            }, HttpStatus.UNAUTHORIZED);
+        }
         //获取从前端传回的param参数
-        let param = this.GetParam(request, 'id')
-
-        const customString = Reflect.getMetadata(CUSTOM_STRING_METADATA_KEY, context.getHandler());
-
-        //跟据传回的参数进行查询
-
-        if (customString == 'groupManagerId') {
-            let item = await this.groupRepository.findOne({ where: { id: param } })
-            if (!item) {
-                throw new HttpException("无对应", HttpStatus.UNAUTHORIZED)
-            }
-
-
-            //进行比较
-            if (item[customString] == obj.sub) {
-                return true
-            } else {
-                throw new HttpException("无对应的群组", HttpStatus.UNAUTHORIZED)
-            }
-
-
-        }
-
-        if (customString == 'userId') {
-            let item = await this.groupRelationRepository.createQueryBuilder('group').where("group.groupId = :groupId", { groupId: param })
-                .leftJoinAndSelect('group.user', 'userId')
-                .getMany()
-            let userId = obj.sub
-            if (!item) {
-                throw new HttpException("无对应", HttpStatus.UNAUTHORIZED)
-            }
-            let isTrue = item.some((item, index) => {
-                return userId == item.user.id
-            })
-
-
-
-
-            return !isTrue
-
-
-        }
-
+     
+        //用户加群的守卫（不能重复加群）
 
 
     }

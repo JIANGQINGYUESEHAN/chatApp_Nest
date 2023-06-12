@@ -64,20 +64,48 @@ export class GroupService {
     let group = await this.detail(groupId)
 
     let item = await this.groupRelationRepository.save({ user, group })
-  
-  if(item.id){
-    return {
-      msg:"加群成功"
+
+    if (item.id) {
+      return {
+        msg: "加群成功"
+      }
     }
-  }
 
   }
 
   //获取群内所有人信息
- async getGroupInform(){}
-  //退群
+  async getGroupInform(userId: string, id: string) {
+    //获取群成员信息
+    let item = await this.groupRelationRepository.createQueryBuilder('group')
+      .where("group.groupId = :groupId", { groupId: id })
+      .leftJoinAndSelect('group.user', 'userId')
+      .getMany()
+    if (item.length != 0) {
+      return item.map((perSon) => {
+        delete perSon.user.password
+        return perSon
+      })
+    }
 
-  
+  }
+  //退群
+ async Withdrawal(userId: string, id: string){
+    
+    let item = await this.groupRelationRepository.createQueryBuilder('group')
+                         .where("group.userId = :userId", {userId})
+                         .leftJoinAndSelect('group.user', 'userId')
+                         .getOne()
+
+                      console.log(item.user);
+
+                      await this.groupRelationRepository.remove(item)
+
+                      return {
+                        msg:"退出成功"
+                      }
+                      
+  }
+
 
 
 

@@ -1,5 +1,6 @@
 import { HttpException } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
+import * as dayjs from 'dayjs'
 //密码加密
 export function encryption(password: string) {
     return bcrypt.hashSync(password, 10)
@@ -42,3 +43,67 @@ export enum StatusCode {
       super({ statusCode, message: msg }, StatusCode.Error);
     }
   }
+
+  export  enum MessageType{
+    TEXT="TEXT",
+    IMAGE="IMAGE"
+    
+  }
+export enum Type{
+   friend="friend",
+   group="group"
+}
+ export type friendRecentChat = {
+    id: string|number,
+    avatarSrc: string,
+    name: string,
+    intro:string,
+    content: string,
+    contentType:MessageType,
+    time:string,
+    type:Type,
+    unreadCount: 0,
+  };
+
+  export type GroupRecentChat={
+    id: string|number,
+    groupAvatarSrc: string,
+    groupName: string,
+    groupIntro:string,
+    userId:string
+    userName:string,
+    userAvatarSrc:string,
+    content: string,
+    contentType:MessageType,
+    time:string,
+    type:Type,
+    unreadCount: 0,
+  }
+  //每两组生成唯一的id
+  export const GenerateUniqueRoomId=(senderId,receiverId)=>{
+    let [max,min]=senderId >receiverId ? [senderId,receiverId]:[receiverId,senderId]
+
+    //通过Math生成
+    const str=String(Math.atan2(max,min))
+    return str
+  }
+
+  export const formatTime = time => {
+    return dayjs(time).format("YYYY-MM-DD HH:mm");
+  };
+
+
+ export function getTimeDiff(time:string):string{
+    let res=""
+    let diff=dayjs().diff(time,"minutes");
+    if(diff<60){
+        res=diff+"分钟前"
+    }else if(diff>60&&diff<24*60){
+  let  diffs=Math.round(diff/60)
+      res= diffs+"小时前"
+    }else if(diff>24*60){
+        let diffs=Math.round(diff/24*60)
+        res=diffs+"天前"
+    }
+    return res
+ }
