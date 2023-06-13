@@ -19,3 +19,13 @@ export class MsgDto{
     @IsDefaultEnum(MessageType)
     type:MessageType
 }
+export class FriendMessageDto {
+    @IsNotEmpty()
+    senderId: number;
+    @IsNotEmpty()
+    receiverId: number;
+    @IsNotEmpty()
+    content: any;
+    @IsNotEmpty()
+    type: MessageType;
+  }

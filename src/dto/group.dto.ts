@@ -1,4 +1,5 @@
 import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { MessageType } from "src/config/util.config";
 import { DataExist } from "src/constraint/exist.constraint";
 import { IsUnique } from "src/constraint/unique.constraint";
 import { DtoDecorator } from "src/decorator/dto.decorator";
@@ -38,3 +39,14 @@ export class UpdateGroupDto{
     @IsOptional()
     intro?: string;
 }
+export class GroupMessageDto {
+    @IsNotEmpty()
+    senderId: number;
+    @IsNotEmpty()
+    groupId: number;
+    @IsNotEmpty()
+    content: any;
+    @IsNotEmpty()
+    type: MessageType;
+  }
+  

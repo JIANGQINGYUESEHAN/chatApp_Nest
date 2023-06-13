@@ -107,3 +107,17 @@ export enum Type{
     }
     return res
  }
+
+
+ //webSocket返回体
+
+ export const successResp = (data, message = "成功") => {
+  return { code: StatusCode.Success, data: data, message };
+};
+export const errorResp = (e) => {
+  return {
+    code: StatusCode.Error,
+    data: null,
+    message: e.response?.message || e.toString(),
+  };
+};
