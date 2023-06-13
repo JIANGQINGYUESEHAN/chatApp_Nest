@@ -53,7 +53,6 @@ export class GroupController {
     @UseGuards(JwtGuard)
     //判断是否在群里
     @SetMetadata(CUSTOM_STRING_METADATA_KEY, 'userId')
-    //判断是否是群主
     @UseGuards(AddGroupGuard)
     @Get('/add/:id')
     @HttpCode(200)

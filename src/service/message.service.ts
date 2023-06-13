@@ -4,9 +4,11 @@ import { FriendMessageRepository, GroupMessageRepository } from "src/repository/
 import { UserRepository } from "src/repository/user.repository";
 import { UserService } from "./user.service";
 import { GroupService } from "./group.service";
-import { GenerateUniqueRoomId, Type, formatTime, getTimeDiff } from "src/config/util.config";
+import { GenerateUniqueRoomId, MessageType, Type, formatTime, getTimeDiff } from "src/config/util.config";
 import { friendRecentChat, GroupRecentChat } from 'src/config/util.config'
 import * as dayjs from "dayjs";
+import { FriendMessageEntity } from "src/entity/friendmessage.entity";
+import { GroupMessageEntity } from "src/entity/groupmessage.entity";
 @Injectable()
 export class MessageService {
     constructor(
@@ -17,6 +19,7 @@ export class MessageService {
         protected groupMessageRepository: GroupMessageRepository,
         protected userService: UserService,
         protected groupService: GroupService,
+
     ) { }
 
     //获取当前所有聊天对象的列表
@@ -140,10 +143,40 @@ export class MessageService {
                 receiverId: friendId,
             })
             .getMany()
-           return item
-            
+        return item
+
     }
-    async sendFriendMessage({ senderId, receiverId, content = "", type = "text" }){}
+    async sendFriendMessage(senderId, receiverId, { content = "", type = "TEXT" }) {
+        let senderUser = await this.userService.GetDetail(senderId)
+        let receiverUser = await this.userService.GetDetail(receiverId)
+        const message = new FriendMessageEntity();
+        message.sender = senderUser;
+        message.receiver = receiverUser;
+        message.content = content;
+        message.type = type;
+        return this.friendMessageRepository.save(message);
+    }
+    async getGroupMessage(groupId: string) {
+        let groupMessage = this.groupMessageRepository
+            .createQueryBuilder("msg")
+            .orderBy("msg.createTime", "ASC")
+            .leftJoinAndSelect("msg.user", "user")
+            .where("msg.group.id = :id", { id: groupId })
+            .getMany();
+
+        return groupMessage
+
+    }
+   async sendGroupMessage(senderId, groupId, { content = "", type = "TEXT" }){
+    let senderUser = await this.userService.GetDetail(senderId)
+    let Group=await this.groupService.detail(groupId)
+    const message = new GroupMessageEntity();
+    message.user = senderUser;
+    message.group = Group;
+    message.content = content;
+    message.type = type as MessageType
+    return this.groupMessageRepository.save(message);
+   }
 }
 
 

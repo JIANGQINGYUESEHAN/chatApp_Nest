@@ -12,7 +12,7 @@ export class FriendIdDto{
     id:string
 }
 @DtoDecorator({type:'body'})
-export class friendMsgDto{
+export class MsgDto{
     @IsString()
     @IsNotEmpty()
     content:string

@@ -24,8 +24,7 @@ export class FriendGuard implements CanActivate {
         let config = AccessTokenConfig()
        
         
-        let obj
-            obj = jwt.verify(token, config.TokenConfig.secret);
+        let obj = jwt.verify(token, config.TokenConfig.secret);
            
             let param = this.GetParam(request, 'id')
             let user = obj.sub
