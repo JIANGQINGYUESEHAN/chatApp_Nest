@@ -80,12 +80,13 @@ export enum Type{
     unreadCount: 0,
   }
   //每两组生成唯一的id
+  
   export const GenerateUniqueRoomId=(senderId,receiverId)=>{
     let [max,min]=senderId >receiverId ? [senderId,receiverId]:[receiverId,senderId]
 
     //通过Math生成
     const str=String(Math.atan2(max,min))
-    return str
+     return str.substring(2, 6);
   }
 
   export const formatTime = time => {

@@ -20,12 +20,11 @@ export class MsgDto{
     type:MessageType
 }
 export class FriendMessageDto {
-    @IsNotEmpty()
-    senderId: number;
-    @IsNotEmpty()
-    receiverId: number;
-    @IsNotEmpty()
+    @IsString()
+    senderId: string;
+    @IsString()
+    receiverId: string;
+    @IsString()
     content: any;
-    @IsNotEmpty()
     type: MessageType;
   }

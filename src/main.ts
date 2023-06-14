@@ -8,6 +8,8 @@ async function bootstrap() {
     new FastifyAdapter()
   );
   useContainer(app.select(AppModule),{fallbackOnErrors:true})
+   // 开启cors
+   app.enableCors();
   await app.listen(3000);
 }
 bootstrap();

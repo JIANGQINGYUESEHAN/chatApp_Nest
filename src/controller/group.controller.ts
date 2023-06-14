@@ -76,7 +76,7 @@ export class GroupController {
     getGroupInform(@ReqUser() userId, @Param() Id: DeleteGroup) {
 
 
-        return this.groupService.getGroupInform(userId, Id.id)
+        return this.groupService.getGroupInform(Id.id)
 
     }
 

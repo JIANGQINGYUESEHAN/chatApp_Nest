@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, Injectable } from "@nestjs/common";
 import { GroupRepository } from "src/repository/group.repository";
 import { GroupRelationRepository } from '../repository/group.repository';
 import { CreateGroupDto, UpdateGroupDto } from "src/dto/group.dto";
@@ -74,12 +74,16 @@ export class GroupService {
   }
 
   //获取群内所有人信息
-  async getGroupInform(userId: string, id: string) {
+  async getGroupInform( id:any) {
     //获取群成员信息
     let item = await this.groupRelationRepository.createQueryBuilder('group')
       .where("group.groupId = :groupId", { groupId: id })
       .leftJoinAndSelect('group.user', 'userId')
       .getMany()
+  if(item.length==0){
+     throw new HttpException({msg:"错误未加入该群"},301)
+  }
+
     if (item.length != 0) {
       return item.map((perSon) => {
         delete perSon.user.password

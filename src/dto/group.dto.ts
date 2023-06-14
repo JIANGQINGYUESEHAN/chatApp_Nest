@@ -41,7 +41,7 @@ export class UpdateGroupDto{
 }
 export class GroupMessageDto {
     @IsNotEmpty()
-    senderId: number;
+    senderId: number |string;
     @IsNotEmpty()
     groupId: number;
     @IsNotEmpty()
