@@ -5,7 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { Expose } from 'class-transformer';
@@ -36,7 +36,7 @@ export class GroupEntity {
 
   @Expose()
   @OneToMany(() => GroupRelationEntity, (GroupRelation) => GroupRelation.id, {
-    cascade: true
+    cascade: true,
   })
   group: GroupRelationEntity;
 

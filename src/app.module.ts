@@ -17,7 +17,7 @@ import { FriendEntity } from './entity/friend.entity';
 import { FriendRepository } from './repository/friend.repository';
 import {
   GroupRelationRepository,
-  GroupRepository
+  GroupRepository,
 } from './repository/group.repository';
 import { GroupEntity } from './entity/group.entity';
 import { GroupRelationEntity } from './entity/group.relation.entity';
@@ -25,7 +25,7 @@ import { FriendMessageEntity } from './entity/friendmessage.entity';
 import { GroupMessageEntity } from './entity/groupmessage.entity';
 import {
   FriendMessageRepository,
-  GroupMessageRepository
+  GroupMessageRepository,
 } from './repository/message.repository';
 import { ChatModule } from './chat/ws.module';
 export const jwtModuleRegister = (): JwtModuleOptions => {
@@ -35,8 +35,8 @@ export const jwtModuleRegister = (): JwtModuleOptions => {
     secret: config.TokenConfig.secret,
 
     verifyOptions: {
-      ignoreExpiration: !isProd
-    }
+      ignoreExpiration: !isProd,
+    },
   };
   if (isProd)
     option.signOptions = { expiresIn: `${config.TokenConfig.token_expired}s` };
@@ -53,7 +53,7 @@ export const jwtModuleRegister = (): JwtModuleOptions => {
       GroupEntity,
       GroupRelationEntity,
       GroupMessageEntity,
-      FriendMessageEntity
+      FriendMessageEntity,
     ]),
     JwtModule.registerAsync({ useFactory: jwtModuleRegister }),
     PassportModule,
@@ -64,8 +64,8 @@ export const jwtModuleRegister = (): JwtModuleOptions => {
       GroupRepository,
       GroupRelationRepository,
       GroupMessageRepository,
-      FriendMessageRepository
-    ])
+      FriendMessageRepository,
+    ]),
   ],
   controllers: Object.values(controller),
   exports: [
@@ -77,14 +77,14 @@ export const jwtModuleRegister = (): JwtModuleOptions => {
       GroupRepository,
       GroupRelationRepository,
       GroupMessageRepository,
-      FriendMessageRepository
-    ])
+      FriendMessageRepository,
+    ]),
   ],
   providers: [
     ...Object.values(services),
     {
       provide: APP_INTERCEPTOR,
-      useClass: TransformInterceptor
+      useClass: TransformInterceptor,
     },
     {
       provide: APP_PIPE,
@@ -92,13 +92,13 @@ export const jwtModuleRegister = (): JwtModuleOptions => {
         validationError: { target: true },
         forbidUnknownValues: true,
         transform: true,
-        whitelist: true
-      })
+        whitelist: true,
+      }),
     },
     {
       provide: APP_FILTER,
-      useClass: AppFilter
-    }
-  ]
+      useClass: AppFilter,
+    },
+  ],
 })
 export class AppModule {}

@@ -3,7 +3,7 @@ import {
   ExecutionContext,
   HttpException,
   HttpStatus,
-  Injectable
+  Injectable,
 } from '@nestjs/common';
 import { ExtractJwt } from 'passport-jwt';
 import * as jwt from 'jsonwebtoken';
@@ -21,9 +21,9 @@ export class FriendGuard implements CanActivate {
       if (!token) {
         throw new HttpException(
           {
-            msg: '请登录'
+            msg: '请登录',
           },
-          HttpStatus.UNAUTHORIZED
+          HttpStatus.UNAUTHORIZED,
         );
       }
       //检验 token 并且返回 userid
@@ -44,9 +44,9 @@ export class FriendGuard implements CanActivate {
         // JWT 验证失败，需要重新登录
         throw new HttpException(
           {
-            msg: '请重新登录'
+            msg: '请重新登录',
           },
-          HttpStatus.UNAUTHORIZED
+          HttpStatus.UNAUTHORIZED,
         );
       }
     }

@@ -5,14 +5,14 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { ReqUser } from 'src/decorator/requser.decorator';
 import {
   LoginDto,
   RegisterUserDto,
   UpdateDto,
-  UpdatePasswordDto
+  UpdatePasswordDto,
 } from 'src/dto/user.dto';
 import { JwtGuard } from 'src/guard/App.guard';
 import { UserService } from 'src/service';
@@ -49,7 +49,7 @@ export class UserController {
   @HttpCode(200)
   async UpdatePassword(
     @Body() updatePassword: UpdatePasswordDto,
-    @ReqUser() userId
+    @ReqUser() userId,
   ) {
     console.log(userId);
     console.log(updatePassword);

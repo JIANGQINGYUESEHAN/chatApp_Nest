@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import {
   GroupRelationRepository,
-  GroupRepository
+  GroupRepository,
 } from 'src/repository/group.repository';
 import {
   FriendMessageRepository,
-  GroupMessageRepository
+  GroupMessageRepository,
 } from 'src/repository/message.repository';
 import { UserRepository } from 'src/repository/user.repository';
 import { UserService } from './user.service';
@@ -15,7 +15,7 @@ import {
   MessageType,
   Type,
   formatTime,
-  getTimeDiff
+  getTimeDiff,
 } from 'src/config/util.config';
 import { friendRecentChat, GroupRecentChat } from 'src/config/util.config';
 import * as dayjs from 'dayjs';
@@ -30,14 +30,14 @@ export class MessageService {
     protected friendMessageRepository: FriendMessageRepository,
     protected groupMessageRepository: GroupMessageRepository,
     protected userService: UserService,
-    protected groupService: GroupService
-  ) {}
+    protected groupService: GroupService,
+  ) { }
 
   //获取当前所有聊天对象的列表
   async getRecentMessageList(userId) {
-    let friend = await this.getRecentChatUser(userId);
-    let group = await this.getRecentChatGroup(userId);
-    let msg = friend.concat(group as any);
+    const friend = await this.getRecentChatUser(userId);
+    const group = await this.getRecentChatGroup(userId);
+    const msg = friend.concat(group as any);
 
     msg.sort((a, b) => {
       return dayjs(a.time).isAfter(b.time) ? -1 : 0;
@@ -52,7 +52,7 @@ export class MessageService {
   }
   //获取 当前聊天对象的信息
   async getRecentChatUser(userId) {
-    let message = await this.friendMessageRepository
+    const message = await this.friendMessageRepository
       .createQueryBuilder('msg')
       .orderBy('msg.createTime', 'DESC')
       .leftJoinAndSelect('msg.sender', 'sender')
@@ -60,11 +60,11 @@ export class MessageService {
       .orWhere('sender.id=:userId', { userId })
       .orWhere('receiver.id=:userId', { userId })
       .getMany();
-    let res = [];
-    let map = new Map();
+    const res = [];
+    const map = new Map();
     //生成唯一id
-    for (let item of message) {
-      let Id = GenerateUniqueRoomId(item.sender.id, item.receiver.id);
+    for (const item of message) {
+      const Id = GenerateUniqueRoomId(item.sender.id, item.receiver.id);
       //判断之前存储过没
       if (!map.has(Id)) {
         //进行存储
@@ -73,10 +73,10 @@ export class MessageService {
       }
     }
     //
-    let obj = res.map((item) => {
+    const obj = res.map((item) => {
       //判断哪一个是好友
-      let friend = item.sender.id == userId ? item.receiver : item.sender;
-      let obj: friendRecentChat = {
+      const friend = item.sender.id == userId ? item.receiver : item.sender;
+      const obj: friendRecentChat = {
         id: friend.id,
         avatarSrc: friend.avatarSrc,
         name: friend.username,
@@ -85,7 +85,7 @@ export class MessageService {
         contentType: item.type,
         time: formatTime(item.createTime),
         type: Type.friend,
-        unreadCount: 0
+        unreadCount: 0,
       };
       return obj;
     });
@@ -93,7 +93,7 @@ export class MessageService {
   }
   //获取当前群的聊天的记录
   async getRecentChatGroup(userId) {
-    let groups = await this.groupRelationRepository
+    const groups = await this.groupRelationRepository
       .createQueryBuilder('relation')
       .leftJoinAndSelect('relation.group', 'group')
       .leftJoinAndSelect('relation.user', 'user')
@@ -102,14 +102,14 @@ export class MessageService {
       .andWhere('msg.groupId = group.id')
       .getMany();
 
-    let RecentChatGroup = groups.map((item) => {
+    const RecentChatGroup = groups.map((item) => {
       const group = item.group;
       const user = item.user;
 
       //获取到最后一条信息
-      let groupMessage = item.group.groupMessage.pop();
+      const groupMessage = item.group.groupMessage.pop();
 
-      let msg: GroupRecentChat = {
+      const msg: GroupRecentChat = {
         id: groupMessage.id,
         groupAvatarSrc: group.avatarSrc,
         groupName: group.groupName,
@@ -121,7 +121,7 @@ export class MessageService {
         contentType: groupMessage.type,
         time: formatTime(groupMessage.createTime),
         type: Type.group,
-        unreadCount: 0
+        unreadCount: 0,
       };
       return msg;
     });
@@ -131,18 +131,18 @@ export class MessageService {
 
   // 查询我发给好友的/好友发给我的 消息
   async getFriendMessage(userId, friendId) {
-    let item = await this.friendMessageRepository
+    const item = await this.friendMessageRepository
       .createQueryBuilder('msg')
       .orderBy('msg.createTime', 'ASC')
       .leftJoinAndSelect('msg.sender', 'sender')
       .leftJoinAndSelect('msg.receiver', 'receiver')
       .where('msg.sender= :senderId And msg.receiver= :receiverId ', {
         senderId: userId,
-        receiverId: friendId
+        receiverId: friendId,
       })
       .orWhere('sender.id = :receiverId And receiver.id = :senderId', {
         senderId: userId,
-        receiverId: friendId
+        receiverId: friendId,
       })
       .getMany();
     return item;
@@ -150,10 +150,10 @@ export class MessageService {
   async sendFriendMessage(
     senderId,
     receiverId,
-    { content = '', type = 'TEXT' }
+    { content = '', type = 'TEXT' },
   ) {
-    let senderUser = await this.userService.GetDetail(senderId);
-    let receiverUser = await this.userService.GetDetail(receiverId);
+    const senderUser = await this.userService.GetDetail(senderId);
+    const receiverUser = await this.userService.GetDetail(receiverId);
     const message = new FriendMessageEntity();
     message.sender = senderUser;
     message.receiver = receiverUser;
@@ -162,7 +162,7 @@ export class MessageService {
     return this.friendMessageRepository.save(message);
   }
   async getGroupMessage(groupId: string) {
-    let groupMessage = this.groupMessageRepository
+    const groupMessage = this.groupMessageRepository
       .createQueryBuilder('msg')
       .orderBy('msg.createTime', 'ASC')
       .leftJoinAndSelect('msg.user', 'user')
@@ -172,8 +172,8 @@ export class MessageService {
     return groupMessage;
   }
   async sendGroupMessage(senderId, groupId, { content = '', type = 'TEXT' }) {
-    let senderUser = await this.userService.GetDetail(senderId);
-    let Group = await this.groupService.detail(groupId);
+    const senderUser = await this.userService.GetDetail(senderId);
+    const Group = await this.groupService.detail(groupId);
     const message = new GroupMessageEntity();
     message.user = senderUser;
     message.group = Group;

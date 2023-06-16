@@ -4,7 +4,7 @@ import {
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-  registerDecorator
+  registerDecorator,
 } from 'class-validator';
 
 @Injectable()
@@ -51,7 +51,7 @@ export function IsRegular(rex: RegExp, args?: ValidationOptions) {
       propertyName,
       options: args,
       constraints: [rex],
-      validator: RegularValidationConstraint
+      validator: RegularValidationConstraint,
     });
   };
 }

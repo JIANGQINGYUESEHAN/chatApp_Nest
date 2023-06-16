@@ -5,5 +5,5 @@ export enum databaseConfig {
   DB_USERNAME = 'DB_USERNAME',
   DB_PASSWORD = 'DB_PASSWORD',
   DB_DATABASE = 'DB_DATABASE',
-  DB_SYNC = 'DB_SYNC'
+  DB_SYNC = 'DB_SYNC',
 }

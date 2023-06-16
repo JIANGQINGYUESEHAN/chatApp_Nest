@@ -4,7 +4,7 @@ import {
   IsOptional,
   IsString,
   Length,
-  isString
+  isString,
 } from 'class-validator';
 import { DataExist } from 'src/constraint/exist.constraint';
 import { IsRegular } from 'src/constraint/regular.constraint';

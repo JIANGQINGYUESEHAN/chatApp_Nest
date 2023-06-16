@@ -3,13 +3,13 @@ import {
   Catch,
   HttpException,
   HttpStatus,
-  Type
+  Type,
 } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
 import {
   EntityNotFoundError,
   EntityPropertyNotFoundError,
-  QueryFailedError
+  QueryFailedError,
 } from 'typeorm';
 import { isObject } from 'lodash';
 
@@ -20,7 +20,7 @@ export class AppFilter<T extends Error> extends BaseExceptionFilter<T> {
   > = [
     { class: EntityNotFoundError, status: HttpStatus.NOT_FOUND },
     { class: QueryFailedError, status: HttpStatus.BAD_REQUEST },
-    { class: EntityPropertyNotFoundError, status: HttpStatus.BAD_REQUEST }
+    { class: EntityPropertyNotFoundError, status: HttpStatus.BAD_REQUEST },
   ];
   catch(exception: T, host: ArgumentsHost) {
     const applicationAdapter =

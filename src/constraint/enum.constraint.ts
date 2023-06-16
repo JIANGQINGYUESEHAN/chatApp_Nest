@@ -4,7 +4,7 @@ import {
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-  registerDecorator
+  registerDecorator,
 } from 'class-validator';
 import { MessageType } from 'src/config/util.config';
 @Injectable()
@@ -42,7 +42,7 @@ export default function IsDefaultEnum(value: any, args?: ValidationOptions) {
       propertyName,
       validator: IsEnumConstraint,
       options: args,
-      constraints: [value]
+      constraints: [value],
     });
   };
 }

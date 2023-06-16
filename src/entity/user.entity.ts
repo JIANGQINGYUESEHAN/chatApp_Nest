@@ -7,7 +7,7 @@ import {
   JoinColumn,
   JoinTable,
   OneToMany,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 import { FriendEntity } from './friend.entity';

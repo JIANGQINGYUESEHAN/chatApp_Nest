@@ -11,20 +11,20 @@ export class GroupService {
   constructor(
     protected groupRepository: GroupRepository,
     protected groupRelationRepository: GroupRelationRepository,
-    protected userService: UserService
-  ) {}
+    protected userService: UserService,
+  ) { }
   //查看群信息
   async detail(id: string) {
-    let item = await this.groupRepository.findOne({ where: { id } });
+    const item = await this.groupRepository.findOne({ where: { id } });
     return item;
   }
 
   //创建群
 
   async CreateGroupe(createGroupDto: CreateGroupDto, groupManagerId) {
-    let item = await this.groupRepository.save({
+    const item = await this.groupRepository.save({
       groupManagerId,
-      ...createGroupDto
+      ...createGroupDto,
     });
     return item;
   }
@@ -46,7 +46,7 @@ export class GroupService {
   }
   //修改群(名称，群头像)
   async UpdateGroup(updateMessage: UpdateGroupDto, id: string) {
-    let item = await this.groupRepository
+    const item = await this.groupRepository
       .createQueryBuilder('group')
       .update({ ...updateMessage })
       .where({ id })
@@ -60,14 +60,14 @@ export class GroupService {
 
   //加群
   async AddGroup(userId, groupId) {
-    let user = await this.userService.GetDetail(userId);
-    let group = await this.detail(groupId);
+    const user = await this.userService.GetDetail(userId);
+    const group = await this.detail(groupId);
 
-    let item = await this.groupRelationRepository.save({ user, group });
+    const item = await this.groupRelationRepository.save({ user, group });
 
     if (item.id) {
       return {
-        msg: '加群成功'
+        msg: '加群成功',
       };
     }
   }
@@ -75,7 +75,7 @@ export class GroupService {
   //获取群内所有人信息
   async getGroupInform(id: any) {
     //获取群成员信息
-    let item = await this.groupRelationRepository
+    const item = await this.groupRelationRepository
       .createQueryBuilder('group')
       .where('group.groupId = :groupId', { groupId: id })
       .leftJoinAndSelect('group.user', 'userId')
@@ -93,7 +93,7 @@ export class GroupService {
   }
   //退群
   async Withdrawal(userId: string, id: string) {
-    let item = await this.groupRelationRepository
+    const item = await this.groupRelationRepository
       .createQueryBuilder('group')
       .where('group.userId = :userId', { userId })
       .leftJoinAndSelect('group.user', 'userId')
@@ -104,7 +104,7 @@ export class GroupService {
     await this.groupRelationRepository.remove(item);
 
     return {
-      msg: '退出成功'
+      msg: '退出成功',
     };
   }
 

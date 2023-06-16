@@ -6,13 +6,13 @@ import {
   Param,
   Post,
   Query,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { ReqUser } from 'src/decorator/requser.decorator';
 import {
   CheckFriendDto,
   DeleteFriend,
-  FindFriendDto
+  FindFriendDto,
 } from 'src/dto/friend.dto';
 import { JwtGuard } from 'src/guard/App.guard';
 import { FriendService } from 'src/service';

@@ -4,7 +4,7 @@ import {
   ExecutionContext,
   HttpStatus,
   HttpException,
-  SetMetadata
+  SetMetadata,
 } from '@nestjs/common';
 import { ExtractJwt } from 'passport-jwt';
 
@@ -12,7 +12,7 @@ import * as jwt from 'jsonwebtoken';
 import { AccessTokenConfig } from 'src/config/util.config';
 import {
   GroupRelationRepository,
-  GroupRepository
+  GroupRepository,
 } from 'src/repository/group.repository';
 import { CUSTOM_STRING_METADATA_KEY } from 'src/config/decorator.config';
 
@@ -20,7 +20,7 @@ import { CUSTOM_STRING_METADATA_KEY } from 'src/config/decorator.config';
 export class GrouperGuard implements CanActivate {
   constructor(
     protected groupRepository: GroupRepository,
-    protected groupRelationRepository: GroupRelationRepository
+    protected groupRelationRepository: GroupRelationRepository,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -31,9 +31,9 @@ export class GrouperGuard implements CanActivate {
     if (!token) {
       throw new HttpException(
         {
-          msg: '请登录'
+          msg: '请登录',
         },
-        HttpStatus.UNAUTHORIZED
+        HttpStatus.UNAUTHORIZED,
       );
     }
 
@@ -49,7 +49,7 @@ export class GrouperGuard implements CanActivate {
 
       const customString = Reflect.getMetadata(
         CUSTOM_STRING_METADATA_KEY,
-        context.getHandler()
+        context.getHandler(),
       );
 
       //跟据传回的参数进行查询
@@ -93,9 +93,9 @@ export class GrouperGuard implements CanActivate {
         // JWT 验证失败，需要重新登录
         throw new HttpException(
           {
-            msg: '请重新登录'
+            msg: '请重新登录',
           },
-          HttpStatus.UNAUTHORIZED
+          HttpStatus.UNAUTHORIZED,
         );
       }
     }

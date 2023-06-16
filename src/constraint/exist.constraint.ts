@@ -4,7 +4,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
   ValidatorOptions,
-  registerDecorator
+  registerDecorator,
 } from 'class-validator';
 import { DataSource, ObjectType } from 'typeorm';
 import { isObject, isNil } from 'lodash';
@@ -20,7 +20,7 @@ export class DataExistConstraint implements ValidatorConstraintInterface {
   async validate(value: any, args?: ValidationArguments) {
     let config: Omit<Condition, 'entity'> = {
       //获取属性名
-      property: args.property
+      property: args.property,
     };
 
     let condition: Condition = (
@@ -58,7 +58,7 @@ export class DataExistConstraint implements ValidatorConstraintInterface {
 }
 export function DataExist(
   param: Condition | ObjectType<any>,
-  args?: ValidatorOptions
+  args?: ValidatorOptions,
 ) {
   return (obj: Record<string, any>, propertyName: any) => {
     registerDecorator({
@@ -66,7 +66,7 @@ export function DataExist(
       propertyName,
       validator: DataExistConstraint,
       options: args,
-      constraints: [param]
+      constraints: [param],
     });
   };
 }

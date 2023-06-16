@@ -3,7 +3,7 @@ import {
   LoginDto,
   RegisterUserDto,
   UpdateDto,
-  UpdatePasswordDto
+  UpdatePasswordDto,
 } from 'src/dto/user.dto';
 import { UserRepository } from 'src/repository/user.repository';
 import { isNil } from 'lodash';
@@ -18,12 +18,12 @@ import CommonException from 'src/config/util.config';
 export class UserService {
   constructor(
     protected userRepository: UserRepository,
-    protected tokenService: TokenService
+    protected tokenService: TokenService,
   ) {}
   //注册用户
   async register(registerUserDto: RegisterUserDto) {
-    let item = await this.userRepository.save(registerUserDto, {
-      reload: true
+    const item = await this.userRepository.save(registerUserDto, {
+      reload: true,
     });
     if (isNil(item)) return '注册失败';
     return '注册成功';
@@ -31,7 +31,7 @@ export class UserService {
   //登录
   async login(loginDto: LoginDto) {
     //跟据 username 查询 数据 和密码 对比密码  返回token
-    let result = await this.userRepository
+    const result = await this.userRepository
       .createQueryBuilder('user')
       .where({ username: loginDto.username })
       .getOne();
@@ -39,8 +39,8 @@ export class UserService {
 
     if (!result) return '请输入正确的账号和密码';
     //返回token
-    let now = dayjs();
-    let token = await this.tokenService.generateAccessToken(result, now);
+    const now = dayjs();
+    const token = await this.tokenService.generateAccessToken(result, now);
 
     return token;
   }
@@ -71,7 +71,7 @@ export class UserService {
 
       return {
         result,
-        msg: '更新成功'
+        msg: '更新成功',
       };
     } catch (error) {
       console.error(error); // 打印错误消息或异常信息，用于调试
@@ -80,8 +80,8 @@ export class UserService {
   }
   //修改密码
   async fixPassword(oldPassword: UpdatePasswordDto, id) {
-    let qb = await this.userRepository.createQueryBuilder();
-    let item = await qb.where({ id }).getOne();
+    const qb = await this.userRepository.createQueryBuilder();
+    const item = await qb.where({ id }).getOne();
     if (!item) return 'token 错误';
     if (item.password == oldPassword.newPassword) return '密码不应该相同';
     try {
@@ -103,7 +103,7 @@ export class UserService {
 
       return {
         result,
-        msg: '更新成功'
+        msg: '更新成功',
       };
     } catch (error) {
       console.error(error); // 打印错误消息或异常信息，用于调试
@@ -112,7 +112,7 @@ export class UserService {
   }
   //获取用户详情
   async GetDetail(credential) {
-    let item = await this.userRepository
+    const item = await this.userRepository
       .createQueryBuilder('user')
       .where('user.username = :credential', { credential })
       .orWhere('user.email = :credential', { credential })

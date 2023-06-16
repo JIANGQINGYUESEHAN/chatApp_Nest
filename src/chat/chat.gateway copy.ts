@@ -4,7 +4,7 @@ import {
   Logger,
   SetMetadata,
   UseGuards,
-  UsePipes
+  UsePipes,
 } from '@nestjs/common';
 import {
   ConnectedSocket,
@@ -14,14 +14,14 @@ import {
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
 import {
   GenerateUniqueRoomId,
   errorResp,
-  successResp
+  successResp,
 } from 'src/config/util.config';
 import { ReqUser } from 'src/decorator/requser.decorator';
 import { GroupMessageDto } from 'src/dto/group.dto';
@@ -31,13 +31,12 @@ import {
   FriendService,
   GroupService,
   MessageService,
-  UserService
+  UserService,
 } from 'src/service';
 @Injectable()
 @WebSocketGateway(3002, { cors: true, transports: ['websocket'] })
 export class ChatGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server; // socket 实例
 
@@ -47,7 +46,7 @@ export class ChatGateway
     protected userService: UserService,
     protected messageService: MessageService,
     protected friendService: FriendService,
-    protected groupService: GroupService
+    protected groupService: GroupService,
   ) {
     this.liveUserIds = new Map();
   }
@@ -82,14 +81,12 @@ export class ChatGateway
   @SubscribeMessage('friendChatConnect')
   async friendChatConnect(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: FriendMessageDto
+    @MessageBody() data: FriendMessageDto,
   ) {
     try {
       console.log(data);
 
-      // console.log(data);
-      // data = JSON.parse(data)
-      // // // console.log(data);
+
 
       const { senderId, receiverId } = data;
 
@@ -110,7 +107,7 @@ export class ChatGateway
   @SubscribeMessage('friendChatMessage')
   async friendMessage(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: FriendMessageDto
+    @MessageBody() data: FriendMessageDto,
   ) {
     console.log(data);
     const { senderId, receiverId, content, type } = data;
@@ -125,7 +122,7 @@ export class ChatGateway
       const message = await this.messageService.sendFriendMessage(
         senderId,
         receiverId,
-        { content, type }
+        { content, type },
       );
 
       //通知两人
@@ -155,7 +152,7 @@ export class ChatGateway
   @SubscribeMessage('groupChatConnect')
   async groupChatConnect(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: GroupMessageDto
+    @MessageBody() data: GroupMessageDto,
   ) {
     const { senderId, groupId } = data;
     console.log(senderId, groupId);
@@ -169,7 +166,7 @@ export class ChatGateway
         .to(group)
         .emit(
           'groupChatConnect',
-          successResp(data, `${user.username}加入了群聊`)
+          successResp(data, `${user.username}加入了群聊`),
         );
     } catch (e) {
       this.server.emit('groupChatConnect', errorResp(e));
@@ -180,7 +177,7 @@ export class ChatGateway
   @SubscribeMessage('groupChatMessage')
   async groupChatMessage(
     @ConnectedSocket() chat: Socket,
-    @MessageBody() data: GroupMessageDto
+    @MessageBody() data: GroupMessageDto,
   ) {
     const { senderId, groupId, content, type } = data;
 
@@ -189,7 +186,7 @@ export class ChatGateway
       let groupMessage = await this.messageService.sendGroupMessage(
         senderId,
         groupId,
-        { content, type }
+        { content, type },
       );
 
       this.server
@@ -199,7 +196,7 @@ export class ChatGateway
       await this.noticeGroupMember(
         senderId,
         groupId,
-        successResp(groupMessage)
+        successResp(groupMessage),
       );
     } catch (error) {
       this.server.emit('groupChatMessage', errorResp(error));

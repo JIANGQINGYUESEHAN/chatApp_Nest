@@ -2,7 +2,7 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
-  NestInterceptor
+  NestInterceptor,
 } from '@nestjs/common';
 import { Observable, map } from 'rxjs';
 
@@ -17,7 +17,7 @@ export class TransformInterceptor<T>
   // eslint-disable-next-line class-methods-use-this
   intercept(
     context: ExecutionContext,
-    next: CallHandler<T>
+    next: CallHandler<T>,
   ): Observable<Response<T>> {
     return next.handle().pipe(
       map((data) => {
@@ -31,11 +31,11 @@ export class TransformInterceptor<T>
           statusCode,
           msg: null,
           success: true,
-          data
+          data,
         };
 
         return res;
-      })
+      }),
     );
   }
 }

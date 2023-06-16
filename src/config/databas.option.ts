@@ -31,7 +31,7 @@ function TypeOrmOptions(): TypeOrmModuleOptions {
     database: Config[databaseConfig.DB_DATABASE],
     synchronize: true,
     autoLoadEntities: true,
-    logging: false
+    logging: false,
   };
 }
 export default TypeOrmOptions;

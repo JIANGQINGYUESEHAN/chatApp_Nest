@@ -6,7 +6,7 @@ import {
   Post,
   Body,
   SetMetadata,
-  Query
+  Query,
 } from '@nestjs/common';
 import { CUSTOM_STRING_METADATA_KEY } from 'src/config/decorator.config';
 import { ReqUser } from 'src/decorator/requser.decorator';
@@ -43,10 +43,10 @@ export class MessageController {
   sendFriendMessage(
     @ReqUser() userId,
     @Param() friendId: FriendIdDto,
-    @Body() friendMsg: MsgDto
+    @Body() friendMsg: MsgDto,
   ) {
     return this.messageService.sendFriendMessage(userId, friendId.id, {
-      ...friendMsg
+      ...friendMsg,
     });
   }
 
@@ -67,10 +67,10 @@ export class MessageController {
   async sendGroupMsg(
     @ReqUser() userId,
     @Param() groupId: DeleteGroup,
-    @Body() groupMsg: MsgDto
+    @Body() groupMsg: MsgDto,
   ) {
     return this.messageService.sendGroupMessage(userId, groupId.id, {
-      ...groupMsg
+      ...groupMsg,
     });
   }
 }

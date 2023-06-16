@@ -3,7 +3,7 @@ import {
   ExecutionContext,
   HttpException,
   HttpStatus,
-  Injectable
+  Injectable,
 } from '@nestjs/common';
 import { ExtractJwt } from 'passport-jwt';
 
@@ -11,14 +11,14 @@ import { CUSTOM_STRING_METADATA_KEY } from 'src/config/decorator.config';
 import { AccessTokenConfig } from 'src/config/util.config';
 import {
   GroupRelationRepository,
-  GroupRepository
+  GroupRepository,
 } from 'src/repository/group.repository';
 import * as jwt from 'jsonwebtoken';
 @Injectable()
 export class AddGroupGuard implements CanActivate {
   constructor(
     protected groupRepository: GroupRepository,
-    protected groupRelationRepository: GroupRelationRepository
+    protected groupRelationRepository: GroupRelationRepository,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -31,9 +31,9 @@ export class AddGroupGuard implements CanActivate {
       if (!token) {
         throw new HttpException(
           {
-            msg: '请登录'
+            msg: '请登录',
           },
-          HttpStatus.UNAUTHORIZED
+          HttpStatus.UNAUTHORIZED,
         );
       }
       //检验 token 并且返回 userid
@@ -43,7 +43,7 @@ export class AddGroupGuard implements CanActivate {
 
       const customString = Reflect.getMetadata(
         CUSTOM_STRING_METADATA_KEY,
-        context.getHandler()
+        context.getHandler(),
       );
 
       //跟据传回的参数进行查询
@@ -76,9 +76,9 @@ export class AddGroupGuard implements CanActivate {
         // JWT 验证失败，需要重新登录
         throw new HttpException(
           {
-            msg: '请重新登录'
+            msg: '请重新登录',
           },
-          HttpStatus.UNAUTHORIZED
+          HttpStatus.UNAUTHORIZED,
         );
       }
     }

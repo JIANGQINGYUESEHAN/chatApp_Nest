@@ -9,14 +9,14 @@ import { AccessTokenConfig, JwtPayload } from 'src/config/util.config';
 export class TokenService {
   constructor(
     protected userRepository: UserRepository,
-    protected jwtService: JwtService
+    protected jwtService: JwtService,
   ) {}
   //生成token
   async generateAccessToken(user: UserEntity, now: dayjs.Dayjs) {
     let config = AccessTokenConfig();
     let accessTokenPayload: JwtPayload = {
       sub: user.id,
-      iat: now.unix()
+      iat: now.unix(),
     };
     let sign = jwt.sign(accessTokenPayload, config.TokenConfig.secret);
     return sign;

@@ -6,7 +6,7 @@ import { DTO_VALIDATION_OPTIONS } from 'src/config/decorator.config';
 export const DtoDecorator = (
   option?: ValidatorOptions & { transformOption?: TransformOptions } & {
     type: Paramtype;
-  }
+  },
 ) => {
   return SetMetadata(DTO_VALIDATION_OPTIONS, option ?? {});
 };

@@ -4,7 +4,7 @@ import {
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-  registerDecorator
+  registerDecorator,
 } from 'class-validator';
 import * as merge from 'deepmerge';
 import { DataSource, ObjectType } from 'typeorm';
@@ -21,7 +21,7 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
   async validate(value: any, args?: ValidationArguments) {
     let config: Omit<Condition, 'entity'> = {
       //代表要验证的属性的名称。
-      property: args.property
+      property: args.property,
     };
     //合并对象
     console.log(value);
@@ -30,7 +30,7 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
       ? merge(config, args.constraints[0])
       : {
           ...config,
-          entity: args.constraints[0]
+          entity: args.constraints[0],
         }) as unknown as Required<Condition>;
 
     //在判断有没有
@@ -77,7 +77,7 @@ export class IsUniqueConstraint implements ValidatorConstraintInterface {
  */
 export function IsUnique(
   param: ObjectType<any> | Condition,
-  args?: ValidationOptions
+  args?: ValidationOptions,
 ) {
   /**
    *  @param Obj :这是装饰器函数的参数，其中 Obj：表示被装饰的属性所属的对象，
@@ -89,7 +89,7 @@ export function IsUnique(
       propertyName,
       options: args,
       constraints: [param],
-      validator: IsUniqueConstraint
+      validator: IsUniqueConstraint,
       // 在装饰器函数内部，调用了 registerDecorator 函数，该函数用于注册装饰器。registerDecorator 函数接受一个配置对象，其中包括以下属性：
       // target: Obj.constructor：表示要装饰的目标类的构造函数。
       // propertyName：表示要装饰的属性的名称。

@@ -3,7 +3,7 @@ import {
   ObjectLiteral,
   ObjectType,
   Repository,
-  TreeRepository
+  TreeRepository,
 } from 'typeorm';
 import { CUSTOM_REPOSITORY_METADATA } from './decorator.config';
 import { isNil } from 'lodash';
@@ -14,7 +14,7 @@ export type RepositoryType<E extends ObjectLiteral> =
 
 export const getRepository = <T extends Repository<E>, E extends ObjectLiteral>(
   dataSource: DataSource,
-  Repo: ClassType<T>
+  Repo: ClassType<T>,
 ): T => {
   if (!isNil(Repo)) return null;
   const entity = Reflect.getMetadata(CUSTOM_REPOSITORY_METADATA, Repo);

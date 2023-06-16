@@ -13,5 +13,5 @@ export const ReqUser = createParamDecorator(
     let obj = jwt.verify(token, config.TokenConfig.secret);
 
     return obj.sub;
-  }
+  },
 );

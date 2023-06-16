@@ -11,7 +11,7 @@ export class FriendService {
   constructor(
     protected userService: UserService,
     protected userRepository: UserRepository,
-    protected friendRepository: FriendRepository
+    protected friendRepository: FriendRepository,
   ) {}
   //删除好友
   //添加好友
@@ -20,15 +20,15 @@ export class FriendService {
     let IsFriend = false;
     //判断是否相等不能加自己
 
-    let Owner = await this.userService.GetDetail(OwnerId);
+    const Owner = await this.userService.GetDetail(OwnerId);
 
-    let Friend = await this.userService.GetDetail(FriendId);
+    const Friend = await this.userService.GetDetail(FriendId);
 
     if (Owner.id == Friend.id) {
       throw new CommonException('不能添加自己');
     }
-    let OwnerRelation = (await this.GetFriends(
-      Owner.id
+    const OwnerRelation = (await this.GetFriends(
+      Owner.id,
     )) as unknown as Array<any>;
 
     IsFriend = OwnerRelation.some((item) => {
@@ -39,9 +39,9 @@ export class FriendService {
   }
   //添加朋友
   async AddFriend(OwnerId, friendName) {
-    let { Friend, Owner, IsFriend } = await this.checkRelation(
+    const { Friend, Owner, IsFriend } = await this.checkRelation(
       OwnerId,
-      friendName
+      friendName,
     );
     if (IsFriend) {
       return this.userService.GetDetail(Friend.id);
@@ -72,18 +72,18 @@ export class FriendService {
 
     // let Friend = await this.userService.GetDetail(FriendId)
 
-    let item = await this.friendRepository
+    const item = await this.friendRepository
       .createQueryBuilder()
       .delete()
       .where({ user: OwnerId, friend: deleteFriend })
       .execute();
     if (item.affected == 1) {
       return {
-        msg: '删除成功'
+        msg: '删除成功',
       };
     }
     return {
-      msg: '删除失败'
+      msg: '删除失败',
     };
   }
 }

@@ -4,7 +4,7 @@ import {
   Logger,
   UseFilters,
   UsePipes,
-  ValidationPipe
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ConnectedSocket,
@@ -14,24 +14,27 @@ import {
   OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
-  WebSocketServer
+  WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { errorResp } from 'src/config/util.config';
 import { FriendMessageDto } from 'src/dto/msg.dto';
 import { BadRequestTransformationFilter } from 'src/filter/chatexception.filter';
+import { UseGuards } from '@nestjs/common';
 import {
   FriendService,
   GroupService,
   MessageService,
-  UserService
+  UserService,
 } from 'src/service';
+import { WsTokenGuard } from 'src/guard/ws/wstoken.guard';
 @Injectable()
+@UseGuards(WsTokenGuard)
 @UsePipes(ValidationPipe)
 @UseFilters(BadRequestTransformationFilter)
 @WebSocketGateway(3002, { cors: true, transports: ['websocket'] })
 export class ChatGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server; // socket 实例
 
@@ -41,13 +44,14 @@ export class ChatGateway
     protected userService: UserService,
     protected messageService: MessageService,
     protected friendService: FriendService,
-    protected groupService: GroupService
+    protected groupService: GroupService,
   ) {
     this.liveUserIds = new Map();
   }
   afterInit(server: any) {
     Logger.log('聊天初始化');
   }
+
   handleConnection(client: any, ...args: any[]) {
     const id = client.handshake?.headers?.userid; //从浏览器进行发送
     if (id) {
@@ -63,11 +67,35 @@ export class ChatGateway
     this.server.emit('onlineStatus', Array.from(this.liveUserIds));
     Logger.log(`id = ${id}的用户下线了`);
   }
+
+  //定义错误处理事件
+  @SubscribeMessage('mistake')
+  async takeMistake(@ConnectedSocket() client: Socket) {
+    try {
+
+      throw new Error('An error occurred');
+    } catch (error) {
+      // 发送错误消息给客户端
+      client.emit('error', error.message);
+    }
+  }
+
+
+
+
   @SubscribeMessage('friendChatConnect')
   async friendChatConnect(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: FriendMessageDto
+    @MessageBody() data: FriendMessageDto,
   ) {
-    console.log(data);
+    try {
+      // 进行处理
+
+      // 如果出现错误
+      throw new Error('An error occurred');
+    } catch (error) {
+      // 发送错误消息给客户端
+      client.emit('error', error.message);
+    }
   }
 }

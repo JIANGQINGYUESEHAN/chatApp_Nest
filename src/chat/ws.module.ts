@@ -5,18 +5,18 @@ import {
   GroupService,
   MessageService,
   TokenService,
-  UserService
+  UserService,
 } from 'src/service';
 import { DatabaseModule } from 'src/module/database.moudle';
 import { UserRepository } from 'src/repository/user.repository';
 import { FriendRepository } from 'src/repository/friend.repository';
 import {
   GroupRelationRepository,
-  GroupRepository
+  GroupRepository,
 } from 'src/repository/group.repository';
 import {
   FriendMessageRepository,
-  GroupMessageRepository
+  GroupMessageRepository,
 } from 'src/repository/message.repository';
 import { JwtService } from '@nestjs/jwt';
 
@@ -30,8 +30,8 @@ import { JwtService } from '@nestjs/jwt';
       GroupRepository,
       GroupRelationRepository,
       GroupMessageRepository,
-      FriendMessageRepository
-    ])
+      FriendMessageRepository,
+    ]),
   ],
   providers: [
     ChatGateway,
@@ -40,7 +40,7 @@ import { JwtService } from '@nestjs/jwt';
     MessageService,
     GroupService,
     TokenService,
-    JwtService
+    JwtService,
   ],
   exports: [
     DatabaseModule.forRepository([
@@ -50,8 +50,8 @@ import { JwtService } from '@nestjs/jwt';
       GroupRepository,
       GroupRelationRepository,
       GroupMessageRepository,
-      FriendMessageRepository
-    ])
-  ]
+      FriendMessageRepository,
+    ]),
+  ],
 })
 export class ChatModule {}

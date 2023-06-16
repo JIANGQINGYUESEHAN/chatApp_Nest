@@ -28,15 +28,15 @@ export const AccessTokenConfig = (): UserConfigInterface => {
     hash: 10,
     TokenConfig: {
       secret: 'b9c7183-790f-4897-a2d6-df96df75991c',
-      token_expired: 3600
-    }
+      token_expired: 3600,
+    },
   };
 };
 
 export enum StatusCode {
   Success = 200,
   Error = 403,
-  SocketConnectError = 205
+  SocketConnectError = 205,
 }
 export default class CommonException extends HttpException {
   constructor(msg: string, statusCode = StatusCode.Error) {
@@ -46,11 +46,11 @@ export default class CommonException extends HttpException {
 
 export enum MessageType {
   TEXT = 'TEXT',
-  IMAGE = 'IMAGE'
+  IMAGE = 'IMAGE',
 }
 export enum Type {
   friend = 'friend',
-  group = 'group'
+  group = 'group',
 }
 export type friendRecentChat = {
   id: string | number;
@@ -117,6 +117,6 @@ export const errorResp = (e) => {
   return {
     code: StatusCode.Error,
     data: null,
-    message: e.response?.message || e.toString()
+    message: e.response?.message || e,
   };
 };

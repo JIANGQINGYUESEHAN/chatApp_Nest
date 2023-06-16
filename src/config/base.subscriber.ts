@@ -12,7 +12,7 @@ import {
   ObjectType,
   DataSource,
   LoadEvent,
-  EntityTarget
+  EntityTarget,
 } from 'typeorm';
 import { isNil } from 'lodash';
 import { ClassType, RepositoryType } from './entity.config';
@@ -50,7 +50,7 @@ export abstract class BaseSubscriber<E extends ObjectLiteral>
   protected getRepository<
     C extends ClassType<T>,
     T extends RepositoryType<E>,
-    A extends EntityTarget<E>
+    A extends EntityTarget<E>,
   >(event: SubscribeEvent<E>, repository?: C, entity?: A) {
     return isNil(repository)
       ? this.getDataSource(event).getRepository(entity ?? this.entity)

@@ -3,7 +3,7 @@ import {
   JoinColumn,
   JoinTable,
   ManyToOne,
-  PrimaryGeneratedColumn
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserEntity } from './user.entity';
 

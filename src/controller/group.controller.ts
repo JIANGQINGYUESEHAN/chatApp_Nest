@@ -6,7 +6,7 @@ import {
   Param,
   Post,
   SetMetadata,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { GroupService } from '../service/group.service';
 import { JwtGuard } from 'src/guard/App.guard';

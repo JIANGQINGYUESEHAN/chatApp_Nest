@@ -2,7 +2,7 @@ import { DynamicModule, Module, Provider, Type } from '@nestjs/common';
 import {
   getDataSourceToken,
   TypeOrmModule,
-  TypeOrmModuleOptions
+  TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
 import { CUSTOM_REPOSITORY_METADATA } from 'src/config/decorator.config';
 import { DataExistConstraint } from 'src/constraint/exist.constraint';
@@ -17,7 +17,7 @@ export class DatabaseModule {
       global: true,
       module: DatabaseModule,
       imports: [TypeOrmModule.forRoot(configRegister)],
-      providers: [IsUniqueConstraint, DataExistConstraint]
+      providers: [IsUniqueConstraint, DataExistConstraint],
     };
   }
 
@@ -28,7 +28,7 @@ export class DatabaseModule {
    */
   static forRepository<T extends Type<any>>(
     repositories: T[],
-    dataSourceName?: string
+    dataSourceName?: string,
   ): DynamicModule {
     const providers: Provider[] = [];
 
@@ -44,13 +44,13 @@ export class DatabaseModule {
         useFactory: (dataSource: DataSource): InstanceType<typeof Repo> => {
           const base = dataSource.getRepository<ObjectType<any>>(entity);
           return new Repo(base.target, base.manager, base.queryRunner);
-        }
+        },
       });
     }
     return {
       exports: providers,
       module: DatabaseModule,
-      providers
+      providers,
     };
   }
 }
