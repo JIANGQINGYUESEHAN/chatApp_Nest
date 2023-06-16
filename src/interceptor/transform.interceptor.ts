@@ -1,15 +1,24 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
-import { Observable, map } from "rxjs";
-
+import {
+  CallHandler,
+  ExecutionContext,
+  Injectable,
+  NestInterceptor
+} from '@nestjs/common';
+import { Observable, map } from 'rxjs';
 
 interface Response<T> {
   data: T;
 }
 
 @Injectable()
-export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> {
+export class TransformInterceptor<T>
+  implements NestInterceptor<T, Response<T>>
+{
   // eslint-disable-next-line class-methods-use-this
-  intercept(context: ExecutionContext, next: CallHandler<T>): Observable<Response<T>> {
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler<T>
+  ): Observable<Response<T>> {
     return next.handle().pipe(
       map((data) => {
         const ctx = context.switchToHttp();
@@ -22,7 +31,7 @@ export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> 
           statusCode,
           msg: null,
           success: true,
-          data,
+          data
         };
 
         return res;

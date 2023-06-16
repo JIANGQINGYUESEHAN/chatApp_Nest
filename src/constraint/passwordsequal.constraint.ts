@@ -7,7 +7,7 @@
 // type Condition = {
 //         /* 实体 */
 //         entity: ObjectType<any>;
-        
+
 //         /* 如果没有指定字段则使用当前验证的属性作为查询依据 */
 //         property?: string;
 //     };
@@ -17,17 +17,16 @@
 //     protected  id:string
 //     constructor(
 //         protected dataSource: DataSource,
-      
+
 //     ) { }
 //   async  validate(value: any,args?: ValidationArguments) {
-    
+
 //         let config: Omit<Condition, "entity"> = {
 //             property: args.constraints[0]
 //         }
 //         let condition = ("entity" in args.constraints[0] ? merge(config, args.constraints[0]) : { ...config, entity: args.constraints[0] }) as Required<Condition>
 //         if (!condition.entity) return false
-        
-      
+
 //         // try {
 //         //     let qb = await this.dataSource.getRepository(condition.entity).createQueryBuilder().where({ id: userId }).getOne()
 //         //     if (!qb) return false
@@ -36,18 +35,16 @@
 //         //     return false
 //         // }
 
-
 //     }
 
 //     // protected getUserId(@ReqUser() userId) {
 //     //     console.log(userId);
-        
+
 //     //     return userId
 //     // }
 
 //     defaultMessage(args?: ValidationArguments) {
 //         const { entity, property, id } = args.constraints[0]
-
 
 //         const queryProperty = property ?? args.property
 
