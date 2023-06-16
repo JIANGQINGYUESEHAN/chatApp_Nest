@@ -5,6 +5,7 @@ import {
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
 import { CUSTOM_REPOSITORY_METADATA } from 'src/config/decorator.config';
+import { DataExistConstraintAll } from 'src/constraint/data.exist.constraint';
 import { DataExistConstraint } from 'src/constraint/exist.constraint';
 
 import { IsUniqueConstraint } from 'src/constraint/unique.constraint';
@@ -17,7 +18,7 @@ export class DatabaseModule {
       global: true,
       module: DatabaseModule,
       imports: [TypeOrmModule.forRoot(configRegister)],
-      providers: [IsUniqueConstraint, DataExistConstraint],
+      providers: [IsUniqueConstraint, DataExistConstraint, DataExistConstraintAll],
     };
   }
 

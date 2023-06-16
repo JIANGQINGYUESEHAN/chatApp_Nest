@@ -2,7 +2,6 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { GroupRepository } from 'src/repository/group.repository';
 import { GroupRelationRepository } from '../repository/group.repository';
 import { CreateGroupDto, UpdateGroupDto } from 'src/dto/group.dto';
-import { GroupEntity } from '../entity/group.entity';
 import { GroupRelationEntity } from 'src/entity/group.relation.entity';
 import { UserService } from './user.service';
 

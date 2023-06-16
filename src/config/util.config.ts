@@ -47,6 +47,7 @@ export default class CommonException extends HttpException {
 export enum MessageType {
   TEXT = 'TEXT',
   IMAGE = 'IMAGE',
+  VIDEO = "VIDEO"
 }
 export enum Type {
   friend = 'friend',

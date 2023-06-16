@@ -11,7 +11,7 @@ import { UserEntity } from './user.entity';
 @Entity()
 export class FriendMessageEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   @ManyToOne(() => UserEntity, (user) => user.id)
   @JoinColumn({ name: 'senderId' })

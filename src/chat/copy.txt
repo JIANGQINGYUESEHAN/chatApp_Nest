@@ -25,7 +25,7 @@ import {
 } from 'src/config/util.config';
 import { ReqUser } from 'src/decorator/requser.decorator';
 import { GroupMessageDto } from 'src/dto/group.dto';
-import { FriendMessageDto } from 'src/dto/msg.dto';
+import { FriendMessageConnectDto } from 'src/dto/msg.dto';
 
 import {
   FriendService,
@@ -81,7 +81,7 @@ export class ChatGateway
   @SubscribeMessage('friendChatConnect')
   async friendChatConnect(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: FriendMessageDto,
+    @MessageBody() data: FriendMessageConnectDto,
   ) {
     try {
       console.log(data);

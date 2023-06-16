@@ -13,7 +13,7 @@ import { MessageType } from 'src/config/util.config';
 @Entity()
 export class GroupMessageEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
   // 映射到user的id
   @ManyToOne(() => UserEntity, (user) => user.id)

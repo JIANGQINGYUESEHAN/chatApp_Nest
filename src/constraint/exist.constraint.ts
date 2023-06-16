@@ -11,12 +11,13 @@ import { isObject, isNil } from 'lodash';
 import * as merge from 'deepmerge';
 type Condition = {
   entity: ObjectType<any>;
+
   property?: string;
 };
 @ValidatorConstraint({ name: 'DataExist', async: true })
 @Injectable()
 export class DataExistConstraint implements ValidatorConstraintInterface {
-  constructor(protected dataSource: DataSource) {}
+  constructor(protected dataSource: DataSource) { }
   async validate(value: any, args?: ValidationArguments) {
     let config: Omit<Condition, 'entity'> = {
       //获取属性名
@@ -30,8 +31,10 @@ export class DataExistConstraint implements ValidatorConstraintInterface {
     ) as Required<Condition>;
     if (!condition.entity) return false;
 
+
     try {
       //进行查询
+
 
       let result = await this.dataSource
         .getRepository(condition.entity)
