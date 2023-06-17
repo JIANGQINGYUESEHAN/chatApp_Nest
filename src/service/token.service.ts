@@ -10,7 +10,7 @@ export class TokenService {
   constructor(
     protected userRepository: UserRepository,
     protected jwtService: JwtService,
-  ) {}
+  ) { }
   //生成token
   async generateAccessToken(user: UserEntity, now: dayjs.Dayjs) {
     let config = AccessTokenConfig();
@@ -23,6 +23,7 @@ export class TokenService {
   }
   //验证token
   async verifyAccessToken(token) {
+
     let config = AccessTokenConfig();
     const result = jwt.verify(token, config.TokenConfig.secret);
     if (!result) return false;

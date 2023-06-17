@@ -10,8 +10,7 @@ import {
 @Injectable()
 @ValidatorConstraint({ name: 'RegularValidation' })
 export class RegularValidationConstraint
-  implements ValidatorConstraintInterface
-{
+  implements ValidatorConstraintInterface {
   private isValid: boolean = true; // 实例变量，用于跟踪验证结果
   validate(value: any, args?: ValidationArguments): boolean | Promise<boolean> {
     //获取验证规则
@@ -34,6 +33,7 @@ export class RegularValidationConstraint
   }
   defaultMessage(args?: ValidationArguments): string {
     let { rex } = args.constraints[0];
+
     if (!rex) {
       return 'Validation rule does not exist';
     } else if (!this.isValid) {
