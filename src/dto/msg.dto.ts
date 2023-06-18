@@ -56,3 +56,8 @@ export class FriendMessageDto {
   @IsDefaultEnum(MessageType)
   type: MessageType;
 }
+export class noticeDto {
+  @IsNotEmpty()
+  @IsString()
+  content: string
+}

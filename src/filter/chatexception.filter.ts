@@ -27,9 +27,8 @@ export class BadRequestTransformationFilter extends BaseWsExceptionFilter {
       return
     }
 
-    const properException = new WsException(exception.getResponse());
-    client.emit('mistake', errorResp(properException.getError()));
 
-    super.catch(properException, host);
+
+    super.catch(exception, host);
   }
 }

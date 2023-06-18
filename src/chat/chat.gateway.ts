@@ -35,7 +35,7 @@ import {
   UserService,
 } from "src/service";
 import { WsTokenGuard } from "src/guard/ws/wstoken.guard";
-import { FriendMessageConnectDto, FriendMessageDto } from "src/dto/msg.dto";
+import { FriendMessageConnectDto, FriendMessageDto, noticeDto } from "src/dto/msg.dto";
 import { AppFilter } from "src/filter/httpexception.filter";
 @Injectable()
 @UseGuards(WsTokenGuard)
@@ -57,6 +57,7 @@ export class ChatGateway
     protected groupService: GroupService
   ) {
     this.liveUserIds = new Map();
+    this.roomUserIds = new Map()
   }
   afterInit(server: any) {
     Logger.log("聊天初始化");
@@ -98,6 +99,7 @@ export class ChatGateway
       const { senderId, receiverId } = data;
 
       const roomId = GenerateUniqueRoomId(senderId, receiverId);
+
 
 
       this.roomUserIds.set(roomId, roomId);
@@ -145,18 +147,20 @@ export class ChatGateway
 
       //假如其他人不在线
       this.server.to(String(receiverId)).emit('notice', successResp(message));
+
     } catch (error) {
       this.server.to(roomId).emit('friendChatMessage', errorResp(error));
     }
   }
   //整体通知事件
   @SubscribeMessage('notice')
-  async notice(@ConnectedSocket() client: Socket, data) {
-    console.log(this.liveUserIds);
+  async notice(@ConnectedSocket() client: Socket, @MessageBody() data: noticeDto) {
+    //获取在线用户
 
-    return '订阅成功';
+    this.server.emit("notice", successResp(data))
 
   }
+
   //判断房间号是否存在
   checkRoomExists(roomId: string): boolean {
     const rooms = Array.from(this.server.sockets.adapter.rooms.keys());
