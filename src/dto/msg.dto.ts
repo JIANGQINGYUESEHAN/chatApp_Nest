@@ -4,6 +4,7 @@ import { DataExistConstraintById } from 'src/constraint/data.exist.constraint';
 import IsDefaultEnum from 'src/constraint/enum.constraint';
 import { DataExist } from 'src/constraint/exist.constraint';
 import { DtoDecorator } from 'src/decorator/dto.decorator';
+import { GroupEntity } from 'src/entity/group.entity';
 import { UserEntity } from 'src/entity/user.entity';
 
 @DtoDecorator({ type: 'param' })
@@ -60,4 +61,31 @@ export class noticeDto {
   @IsNotEmpty()
   @IsString()
   content: string
+}
+export class GroupMessageConnectDto {
+  @IsNotEmpty()
+  @DataExistConstraintById({ entity: UserEntity })
+  @IsString()
+  senderId: string
+  @IsNotEmpty()
+  @DataExistConstraintById({ entity: GroupEntity })
+  @IsString()
+  groupId: string
+}
+
+export class GroupMessageDto {
+  @IsNotEmpty()
+  @DataExistConstraintById({ entity: UserEntity })
+  @IsString()
+  senderId: string
+  @IsNotEmpty()
+  @DataExistConstraintById({ entity: GroupEntity })
+  @IsString()
+  groupId: string
+  @IsString()
+  @IsNotEmpty()
+  content: string
+  @IsNotEmpty()
+  @IsDefaultEnum(MessageType)
+  type: string
 }

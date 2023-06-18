@@ -77,3 +77,4 @@ export class UpdatePasswordDto {
   @IsString()
   newPassword: string;
 }
+

@@ -34,9 +34,10 @@ import {
   MessageService,
   UserService,
 } from "src/service";
-import { WsTokenGuard } from "src/guard/ws/wstoken.guard";
-import { FriendMessageConnectDto, FriendMessageDto, noticeDto } from "src/dto/msg.dto";
+import { WsTokenGuard } from "src/guard/ws/ws.token.guard";
+import { FriendMessageConnectDto, FriendMessageDto, GroupMessageConnectDto, GroupMessageDto, noticeDto } from "src/dto/msg.dto";
 import { AppFilter } from "src/filter/httpexception.filter";
+import { WsGroupFriedGuard } from "src/guard/ws/ws.group.friend.guard";
 @Injectable()
 @UseGuards(WsTokenGuard)
 @UsePipes(ValidationPipe)
@@ -90,6 +91,7 @@ export class ChatGateway
   }
 
   //朋友上线连接
+  @UseGuards(WsGroupFriedGuard)
   @SubscribeMessage("friendChatConnect")
   async friendChatConnect(
     @ConnectedSocket() client: Socket,
@@ -156,9 +158,78 @@ export class ChatGateway
   @SubscribeMessage('notice')
   async notice(@ConnectedSocket() client: Socket, @MessageBody() data: noticeDto) {
     //获取在线用户
-
     this.server.emit("notice", successResp(data))
+  }
+  @SubscribeMessage('groupChatConnect')
+  async groupChatConnect(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: GroupMessageConnectDto,
+  ) {
+    const { senderId, groupId } = data;
+    console.log(senderId, groupId);
 
+    const group = groupId + '';
+    try {
+      const user = await this.userService.GetDetail(senderId);
+
+      client.join(group);
+      this.server
+        .to(group)
+        .emit(
+          'groupChatConnect',
+          successResp(data, `${user.username}加入了群聊`),
+        );
+    } catch (e) {
+      this.server.emit('groupChatConnect', errorResp(e));
+    }
+  }
+  //
+
+  @SubscribeMessage('groupChatMessage')
+  async groupChatMessage(
+    @ConnectedSocket() chat: Socket,
+    @MessageBody() data: GroupMessageDto,
+  ) {
+    const { senderId, groupId, content, type } = data;
+
+    const roomId = groupId + '';
+    try {
+      let groupMessage = await this.messageService.sendGroupMessage(
+        senderId,
+        groupId,
+        { content, type },
+      );
+
+      this.server
+        .to(roomId)
+        .emit('groupChatMessage', successResp(groupMessage));
+      // 通知不在看群但是在线的人
+      await this.noticeGroupMember(
+        senderId,
+        groupId,
+        successResp(groupMessage),
+      );
+    } catch (error) {
+      this.server.emit('groupChatMessage', errorResp(error));
+    }
+  }
+  async noticeGroupMember(userId, groupId, content) {
+    const Member = await this.groupService.getGroupInform(groupId);
+
+    const userIds = Member.map((item) => String(item?.user?.id));
+    console.log(userIds);
+
+    const liverGroupMember = userIds.filter((i) => {
+      return String(i) !== userId.toString();
+    });
+    console.log(liverGroupMember);
+    console.log(this.liveUserIds);
+
+    //对信息进行广播
+    // 通知在线的群员有新消息
+    for (const i of liverGroupMember) {
+      this.server.to(String(i)).emit('notice', content);
+    }
   }
 
   //判断房间号是否存在
