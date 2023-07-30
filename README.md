@@ -24,7 +24,7 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+使用Nest.js框架搭建的聊天后端，使用了 mysql、TS、jwt....等技术，该后端适配的前端正在加紧开发中
 
 ## Installation
 
