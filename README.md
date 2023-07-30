@@ -68,12 +68,16 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 - Website - [https://nestjs.com](https://nestjs.com/)
 - Twitter - [@nestframework](https://twitter.com/nestframework)
 
-##改进与计划:
--将登录注册流程 使用redis进行加以改进
--使用redis将消息进行转发而不是直接使用mysql存储
--增加聊天群管理员，并增加拉人踢人的功能
--朋友圈的计划上线，将发送的视频和图片转存到cdn
--react前端计划
+## 改进与计划
+
+###### 将登录注册流程 使用 redis 进行加以改进
+
+###### 使用 redis 将消息进行转发而不是直接使用 mysql 存储
+
+###### 增加聊天群管理员，并增加拉人踢人的功能
+
+###### 朋友圈的计划上线，将发送的视频和图片转存到 cdn
+
 
 ## License
 
